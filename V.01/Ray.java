@@ -7,6 +7,7 @@ public class Ray{
     public Ray(Vector3D origin, Vector3D direction) {
         this.origin = origin;
         this.direction = direction.normalization(); // it is better normalized ASAP
+        // I don't want to know anything from the vector but its direction
     }
 
     // Getters
