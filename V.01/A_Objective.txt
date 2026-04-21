@@ -1,0 +1,11 @@
+Objective for Ray-Tracer v.01: RENDER FLAT SPHERES
+
+
+For the analytical solution:
+
+Ray equation:
+- O = The origin of the Ray shot.
+- D = Direction of the Ray.
+- C = Sphere center (x,y,z), even if now is 3D.
+- t = distance along the ray to the intersection. 
+- Point = The Point(s) where the Ray intercepts the sphere (circle in this version).
