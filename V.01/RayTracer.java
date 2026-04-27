@@ -3,12 +3,13 @@
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class RayTracer {
-    private Camera camera; // Instances a Camera object, named camera
-    private Scene scene; // Instances a Scene object, named scene
-    private Color backgroundColor; // Instances a Color object, named backgroundColor
+    private final Camera camera; // Instances a Camera object, named camera
+    private final Scene scene; // Instances a Scene object, named scene
+    private final Color backgroundColor; // Instances a Color object, named backgroundColor
 
     public RayTracer(Camera camera, Scene scene, Color backgroundColor) { // The constructor
         this.camera = camera;
@@ -48,7 +49,7 @@ public class RayTracer {
         try {
             ImageIO.write(image, "png", new File(outputPath));
             System.out.println("\n Image saved in: " + outputPath);
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.out.println("\n Error saving image: " + e.getMessage());
         }
     }
