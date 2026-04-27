@@ -18,6 +18,6 @@ public class Main {
 
         // Render with white background (doesn't matter the color of the background)
         RayTracer raytracer = new RayTracer(camera, scene, Color.BLACK); // Change manually the color of background
-        raytracer.render("Ray-Tracer_V01.png");
+        raytracer.render("Renders/Ray-Tracer_V01.png");
     }
 }

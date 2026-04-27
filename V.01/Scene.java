@@ -4,7 +4,7 @@
 import java.util.ArrayList; // for knowing what colors does each one of the objects has
 
 public class Scene {
-    private ArrayList<Object3D> objects; // Objects list of Object3D
+    private final ArrayList<Object3D> objects; // Objects list of Object3D
 
     public Scene(){ // the constructor, I forgot to initialize the array objects
         this.objects = new ArrayList<>();
