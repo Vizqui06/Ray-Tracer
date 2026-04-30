@@ -9,7 +9,7 @@ public class Ray{
         this.direction = direction.normalization(); // it is better normalized ASAP
         // I don't want to know anything from the vector but its direction
     }
-
+ 
     // Getters
     public Vector3D getOrigin() {return origin;}
     public Vector3D getDirection() {return direction;}

@@ -4,7 +4,7 @@
 // Recommended not declare it as an mere object. Due to its nature, it is better to make it independent.
 
 public class Camera{
-
+ 
 
     // NOTES FOR UPDATE (V.02):
     // Camera will also define the range where objects in the scene will be rendered or not, for avoiding useless operations.

@@ -5,7 +5,7 @@ import java.util.ArrayList; // for knowing what colors does each one of the obje
 
 public class Scene {
     private final ArrayList<Object3D> objects; // Objects list of Object3D
-    private Camera camera; // Takes camera as an object to confirm if its method "isInFrustum" is true or false in each "hit" evaluation
+    private final Camera camera; // Takes camera as an object to confirm if its method "isInFrustum" is true or false in each "hit" evaluation
 
     public Scene(Camera camera){ // the constructor
         this.objects = new ArrayList<>();

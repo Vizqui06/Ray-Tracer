@@ -18,7 +18,7 @@ public class TriangleIntersection extends Object3D{
     // A triangle DOES NOT HAVE A RADIO, it has 3 vertices
     private Vector3D v0; // superior vertex
     private Vector3D v1; // inferior left vertex
-    private Vector3D v2; // inferior right vertex
+    private Vector3D v2; // inferior right vertex 
     
     public TriangleIntersection (Vector3D v0, Vector3D v1, Vector3D v2, Color color){
         super(color);

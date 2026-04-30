@@ -6,7 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
-public class RayTracer {
+public class RayTracer { 
     private final Camera camera; // Instances a Camera object, named camera
     private final Scene scene; // Instances a Scene object, named scene
     private final Color backgroundColor; // Instances a Color object, named backgroundColor

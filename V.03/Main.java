@@ -34,7 +34,7 @@ public class Main {
         // Note to self and users: because I parametrize the camera pixels, the vector can only manage from -1 to +1
         // Values beyond these limits will make the objects seen by half or dissappear from the scene
 
-
+ 
 // OBJECTS SETTINGS:
 
 // Sphere(radio, center, color)
@@ -87,7 +87,7 @@ public class Main {
 
 
 
-        List<TriangleIntersection> model = ObjReader.load("Models/PC.obj", Color.WHITE);
+        List<TriangleIntersection> model = ObjReader.load("Models/PC_model.obj", Color.WHITE);
         for (TriangleIntersection triangle : model) {
             scene.addObject(triangle);
         }

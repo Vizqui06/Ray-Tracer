@@ -114,4 +114,4 @@ public class ObjReader {
         faces.size() + " faces.\n" + triangles.size() + " generated triangles.");
         return triangles; // Return the list of TriangleIntersection that is ready for initialization in the scene
     }
-}
+} 

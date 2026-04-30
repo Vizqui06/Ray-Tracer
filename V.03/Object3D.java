@@ -15,7 +15,7 @@ public abstract class Object3D {
     public abstract Intersection intersect (Ray ray); // an abstract method so every child can be hit properly
     // that was weird to write
 }
-
+ 
 /*
 Constructor discarded due to too many attributes
 It is easier with the Color import

@@ -1,8 +1,8 @@
 public class Intersection{
 
-    private boolean collitionHappened; // boolean that says if there were a collition
-    private double t; // distance t that will be used in class Ray
-    private Vector3D hitPoint; // where does the ray hit
+    private final boolean collitionHappened; // boolean that says if there were a collition
+    private final double t; // distance t that will be used in class Ray
+    private final Vector3D hitPoint; // where does the ray hit
     private Object3D objectHit;
     
 

@@ -7,7 +7,7 @@ public class Sphere extends Object3D{
     
     public Sphere (double radius, Vector3D center, Color color){
         super(color);
-        this.center = center;
+        this.center = center; 
         this.radius = radius;
     }
     // Because is a child class, it must includ all inherit methods of father's class
