@@ -38,9 +38,10 @@ public class Vector3D{
     }
 
     public Vector3D productCross(Vector3D other_vector){ // The product cross generates a perpendicular vector of the two vectors
-        return new Vector3D(this.y*other_vector.z - this.z*other_vector.y, // pos in x
-                            this.z*other_vector.x - this.x*other_vector.z, // pos in y
-                            this.x*other_vector.y - this.y*other_vector.x  // pos in z
+        return new Vector3D(
+            this.y * other_vector.z - this.z * other_vector.y, // pos in x
+            this.z * other_vector.x - this.x * other_vector.z, // pos in y
+            this.x * other_vector.y - this.y * other_vector.x  // pos in z
         );}
 
     public double magnitude(){
@@ -56,50 +57,12 @@ public class Vector3D{
         return new Vector3D(x/magnitude(), y/magnitude(), z/magnitude()); // divides the vector by its magnitude to normalize it (=1)
     }
 
-    public void rotateY(double commonAngle){
+    public Vector3D rotateY(double commonAngle){
         double radians = Math.toRadians(commonAngle);
-        double sin = Math.sin(radians);
-        double cos = Math.cos(radians);
-
-        double rotatedX = x*cos + z*sin;
-        double rotatedY = y;
-        double rotatedZ = -x*sin + z*cos;
-        this.x = rotatedX;
-        this.y = rotatedY;
-        this.z = rotatedZ;
+        double rotatedX = this.x * Math.cos(radians) + this.z * Math.sin(radians);
+        double rotatedY = this.y;
+        double rotatedZ = -1 * this.x * Math.sin(radians) + this.z * Math.cos(radians);
+        // this.x = rotatedX; this.y = rotatedY; this.z = rotatedZ;
+        return new Vector3D(rotatedX, rotatedY, rotatedZ);
     }
 }
-
-/*
-Sumar 2 vectores:
-public Vector3D vectorAddition
-this.x + other_vectorX // suma las posiciones del vector actual con el otro en la posición X
-this.y + other_vectorY // suma las posiciones del vector actual con el otro en la posición Y
-this.z + other_vectorZ // suma las posiciones del vector actual con el otro en la posición Z
-
-public Vector vectorSubstract
-this.x - other_vectorX // resta las posiciones del vector actual con el otro en la posición X
-this.y - other_vectorY // resta las posiciones del vector actual con el otro en la posición Y
-this.z - other_vectorZ // resta las posiciones del vector actual con el otro en la posición Z
-
-public Vector saclarIt
-// Un escalar multiplica cada posición del vector por el mismo escalar
-this.x * sclalar 
-this.y * sclalar
-this.z * sclalar
-
-public double productPoint
-this.x + other_vectorX // suma las posiciones del vector actual con el otro en la posición X
-this.y + other_vectorY // suma las posiciones del vector actual con el otro en la posición Y
-this.z + other_vectorZ // suma las posiciones del vector actual con el otro en la posición Z
-
-public Vector3D product cross
-A x B = ( AyBz - AzBy, AzBx - AxBz, AxBy - AyBx )
-crossResultX = this.y*other_vectorZ - this.z*other_vectorY
-crossResultY = this.z*other_vectorX - this.x*other_vectorZ
-crossResultZ = this.x*other_vectorY - this.y*other_vectorX
-
-Magnitud
-Normalización
-
-*/ 

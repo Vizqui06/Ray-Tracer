@@ -63,7 +63,7 @@ public class ObjReader {
             }
 
         } catch (IOException e) { // In case of ANY error:
-            System.err.println("There was an error reading the OBJ file: " + e.getMessage());
+            System.err.println("\nThere was an error reading the OBJ file: " + e.getMessage());
             return triangles; // Return empty list if failed
         }
 
@@ -111,7 +111,7 @@ public class ObjReader {
             }   // NOTE: It is v0, v2, v1 to be accurate with the counter-clockwise order that TriangleIntersection manages for the normal calculation
         }
 
-        System.out.println("OBJ Ready to Render.\nWith: \n" + vertices.size() + " vertices.\n" + 
+        System.out.println("\nOBJ Ready to Render.\nWith: \n" + vertices.size() + " vertices.\n" + 
         faces.size() + " faces.\n" + triangles.size() + " generated triangles.");
         return triangles; // Return the list of TriangleIntersection that is ready for initialization in the scene
     }

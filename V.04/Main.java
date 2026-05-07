@@ -26,8 +26,14 @@ public class Main {
 
         // Camera in Z = 5, looking at -Z axis (the scene and not me)
         // nearPlane of 0.1 is very close, farPlane of 100 is decently far
-        Camera camera = new Camera(new Vector3D(0, 0, 5), 800, 600, 0.1, 100); 
-                                                // position,           width,       height,      near plane,     far plane
+        Camera camera = new Camera(new Vector3D(
+                0.0, 0.0, 6.0), // position
+                800.0, // width
+                600.0, //height
+                0.01, //near plane
+                100.0, //far plane
+                0 // rotation
+        ); 
 
         // Scene with 2 spheres
         Scene scene = new Scene(camera); // Instances a new scene
@@ -47,9 +53,9 @@ public class Main {
 //     Z: depth. It should be between nearPlane and farPlane of the camera
 //        With camera at Z=5 and objects at Z=0, t around 5 --> the sphere is inside the frustum
 
-        scene.addObject(new Sphere(0.12, new Vector3D(0.4, -0.6, 0.5), Color.RED)); // add a red sphere with its parameters
-        scene.addObject(new Sphere(0.17, new Vector3D(0.8, 0.4, 0), Color.BLUE)); // add a blue sphere with its parameters
-        scene.addObject(new Sphere(0.15, new Vector3D(-0.4, 0.4, 0), Color.GREEN)); // add a green sphere with its parameters
+        scene.addObject(new Sphere(0.12, new Vector3D(0.84, -0.4, 0.5), Color.RED)); // add a red sphere with its parameters
+        scene.addObject(new Sphere(0.17, new Vector3D(0.8, 0.6, 0), Color.BLUE)); // add a blue sphere with its parameters
+        scene.addObject(new Sphere(0.15, new Vector3D(-0.6, 0.5, 0), Color.GREEN)); // add a green sphere with its parameters
 
 
 // Triangle (v0, v1, v2, center, color)
@@ -87,7 +93,9 @@ public class Main {
 
 
         // Just load the object (at this point, it is centered at the origin and its scale is 1.0x)
-        List<TriangleIntersection> defaultModel = ObjReader.load("Models/PC_model.obj", Color.WHITE);
+        //List<TriangleIntersection> defaultMonky = ObjReader.load("Models/Monky.obj", Color.YELLOW);
+        List<TriangleIntersection> defaultCotton = ObjReader.load("Models/Cotton.obj", Color.MAGENTA);
+        List<TriangleIntersection> defaultPot = ObjReader.load("Models/Pot.obj", Color.CYAN);
         
 
 // MODEL3D SETTINGS
@@ -107,12 +115,15 @@ public class Main {
 // 180° = it depends, but hopefully, looking towards the camera (-Z)
 // 270° = turned 90° to the left
 
-
-        Model3D model = new Model3D(defaultModel, new Vector3D(-0.5, -0.3, 3), 0.3);
+        //Model3D modelMonky = new Model3D(defaultMonky, new Vector3D(-0.9, -0.3, 1), 0.7);
+        Model3D modelCotton = new Model3D(defaultCotton, new Vector3D(0.21, -0.1, 2), 1.4);
+        Model3D modelPot = new Model3D(defaultPot, new Vector3D(-0.62, -0.32, 2), 0.4);
         // Requirements: 
         // List of triangles (the default model of ObjReader)
         // Position in the world, scale and Y-axis-rotation (where to look)
-        model.addToScene(scene);
+        //modelMonky.addToScene(scene);
+        modelCotton.addToScene(scene);
+        modelPot.addToScene(scene);
 
 // Directional light settings:
 // Light(direction, color, intensity)
@@ -122,7 +133,11 @@ public class Main {
 // Useful range for direction: any vector, it will be normalized internally. For example, (0, 0, 1) means that the light comes from the front of the scene (from user to the far away)
 // Useful range for intensity: 0.0 to 1.0
 
-        scene.addLight(new Light(new Vector3D(0.0, -1.0, 1.0), Color.WHITE, 1.0));
+        //scene.addLight(new Light(new Vector3D(0.0, 1.0, 1.0), Color.WHITE, 1.0));
+        //scene.addLight(new Light(new Vector3D(3.0, -7.0, 2.0), Color.WHITE, 1.0));
+        scene.addLight(new Light(new Vector3D(0.0, 3.0, 4.0), Color.WHITE, 1.0));
+
+
         // The direction of the light will be normalized, the values mean that the light comes from the upper front of the scene (from user to the far away, and from up to down)
         // The color of the light is WHITE, its intensity is at max (drastic difference in lights/shadows)
 

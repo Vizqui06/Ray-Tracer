@@ -4,7 +4,7 @@
 // Recommended not declare it as an mere object. Due to its nature, it is better to make it independent.
 
 public class Camera{
- 
+
 
     // NOTES FOR UPDATE (V.02):
     // Camera will also define the range where objects in the scene will be rendered or not, for avoiding useless operations.
@@ -21,15 +21,17 @@ public class Camera{
 
 
     private Vector3D positionWorld; // where in the scene is the camera
-    private double width, height; // width and height of the resolution
-    private double nearPlane, farPlane;
+    private double width, height, rotation; // width and height of the resolution
+    private double nearPlane, farPlane; // near and far plane of the frustum, objects with t < near or t > far will not be rendered
 
-    public Camera(Vector3D positionWorld, double width, double height, double nearPlane, double farPlane) {
-        this.positionWorld = positionWorld;
+    public Camera(Vector3D positionWorld, double width, double height, double nearPlane, double farPlane, double rotation) {
+        this.positionWorld = positionWorld.rotateY(rotation);
         this.width = width;
         this.height = height;
         this.nearPlane = 1e-6;
         this.farPlane = 1000;
+        this.rotation = rotation;
+
     }
     // Getters
     public Vector3D getPositionWorld() {return positionWorld;}
@@ -37,6 +39,7 @@ public class Camera{
     public double getHeight() {return height;}
     public double getNearPlane() {return nearPlane;}
     public double getFarPlane() {return farPlane;}
+    public double getRotation() {return rotation;}
 
     // Setters
     public void setPositionWorld(Vector3D positionWorld) {this.positionWorld = positionWorld;}
@@ -44,12 +47,13 @@ public class Camera{
     public void setHeight(double height) {this.height = height;}
     public void setNearPlane(double nearPlane) {this.nearPlane = nearPlane;}
     public void setFarPlane(double farPlane) {this.farPlane = farPlane;}
+    public void setRotation(double rotation) {this.rotation = rotation;}
+
 
     // Function to verify if an intersection with an object was within the visible volume, the frustum
     public boolean isInFrustum(double t){
         return t>nearPlane && t<farPlane; // t is the distance from origin to an intersection
     }
-
 
     // Camera has to convert pixels (x,y) into a Ray. Good thing it has no perspective, yet
     // Pixels range are limited: X goes from 0 to width -1; Y goes from 0 to height -1

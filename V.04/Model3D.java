@@ -31,7 +31,7 @@ public class Model3D {
             Vector3D v2 = transformVertex(triangle.getV2());
             // The color of each triangle is preserved from the original
             // Puts all tirangles (with the tag of its color) in the array
-            transformed.add(new TriangleIntersection(v0, v1, v2, triangle.getColor()));
+            transformed.add(new TriangleIntersection(v0, v2, v1, triangle.getColor()));
         }
         return transformed;
     }
@@ -39,15 +39,11 @@ public class Model3D {
     // Method to actually set, scale and rotate the object in the scene
     private Vector3D transformVertex(Vector3D vertex) {
         // According to the scale, the triangles must increment/decrement its size
-        double x = vertex.getX() * scale;
-        double y = vertex.getY() * scale;
-        double z = vertex.getZ() * scale;
-
-        // PPut the vertex to the desired center of the scene
+        // Put the vertex to the desired center of the scene
         return new Vector3D(
-            x + position.getX(),
-            y + position.getY(),
-            z + position.getZ()
+            scale * vertex.getX() + position.getX(),
+            scale * vertex.getY() + position.getY(),
+            scale * vertex.getZ() + position.getZ()
         );
     }
 
