@@ -1,29 +1,19 @@
-import java.awt.Color; // Importing the Color class to handle the color of the 3D model
-import java.io.BufferedReader; // Importing BufferedReader to read text from the input stream efficiently
-import java.io.FileInputStream; // Importing FileInputStream to read the raw bytes from the .obj file
-import java.io.IOException; // Importing IOException to handle potential errors during file reading
-import java.io.InputStreamReader; // Importing InputStreamReader to bridge byte streams to character streams
-import java.util.ArrayList; // Importing ArrayList to use dynamic arrays for storing geometry data
+import java.awt.Color;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap; // Importing HashMap to store key-value pairs for smoothed normal calculations
-import java.util.List; // Importing the List interface for standardized collection usage
+import java.util.List;
 import java.util.Map; // Importing the Map interface to manage the smoothed normals mapping
 
-// This class is responsible for parsing Wavefront .obj files.
-// It reads vertex positions, normals, and face definitions to build a list of triangles.
-// It also handles centering the model and calculating smoothed normals for different shading cases.
 
 public class ObjReader {
 
     // These comments explain how the program decides which normal to use for each triangle:
     // Case 1: When the face already provides vertex normal (vn) indices.
-    // Case 2: When there are no vn indices but a smoothing group is active; we average face normals.
-    // Case 3: When there are no normals and no smoothing group; we use a single flat normal.
-
-    // This function opens an .obj file, parses its contents, centers the geometry, 
-    // and converts faces into TriangleIntersection objects for rendering.
-    // The parameter filePath: The string path to the .obj file on the disk.
-    // The parameter color: The base color to be assigned to all generated triangles.
-    // In the end, it will return a list containing all the triangles formed from the model data.
+    // Case 2: When there are no vn indices: Automatic smooth on everything
     
     public static List<TriangleIntersection> load(String filePath, Color color) {
         // Initializing a list to store the 3D coordinates of each vertex found in the file
@@ -213,7 +203,7 @@ public class ObjReader {
                     triangles.add(new TriangleIntersection(tv0, tv2, tv1, color, tn0, tn2, tn1));
 
                 } 
-                // Case 3: Automatic smooth (with or without S groups)
+                // Case 2: Automatic smooth (with or without S groups)
                 else {
                     int effectiveSG = (sg == 0) ? 1 : sg;
                     // Fetching the averaged normals we computed earlier for each vertex
