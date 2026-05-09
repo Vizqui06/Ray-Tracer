@@ -21,16 +21,30 @@ public class Camera{
 
 
     private Vector3D positionWorld; // where in the scene is the camera
-    private double width, height, rotation; // width and height of the resolution
+    private double width, height, rotation; // width and height of the resolution, and the vector to rotate
     private double nearPlane, farPlane; // near and far plane of the frustum, objects with t < near or t > far will not be rendered
 
+    private final Vector3D aiming; // this vector will tell WHERE is the camera aiming
+    private final Vector3D horizontal; // horizontal axis of the image plane
+    private final Vector3D vertical; // vertical axis of the image plane
+
     public Camera(Vector3D positionWorld, double width, double height, double nearPlane, double farPlane, double rotation) {
-        this.positionWorld = positionWorld.rotateY(rotation);
+        this.positionWorld = positionWorld;
         this.width = width;
         this.height = height;
         this.nearPlane = Math.max(nearPlane, 1e-9);
         this.farPlane = farPlane;
         this.rotation = rotation;
+
+        // Camera base vectors without rotation
+        Vector3D baseAiming = new Vector3D(0, 0, -1); // Aiming to -Z, where the scene is (+Z is pointing to me)
+        Vector3D baseHorizontal = new Vector3D(1, 0, 0); // the horizontal axis is the X axis, pointing to the right of the camera
+        Vector3D baseVertical = new Vector3D(0, 1, 0); // the vertical axis is the Y axis, pointing up of the camera
+
+        // When rotating in Y, aiming and horizontal vectors change; vertical always stays the same in pure Y rotation
+        this.aiming = baseAiming.rotateY(rotation); // the aiming vector rotates the same as the rotation angle
+        this.horizontal = baseHorizontal.rotateY(rotation); // the horizontal vector rotates because it is perpendicular to the aiming vector
+        this.vertical = baseVertical; // rotateY does not affect Y axis
 
     }
     // Getters
@@ -40,7 +54,10 @@ public class Camera{
     public double getNearPlane() {return nearPlane;}
     public double getFarPlane() {return farPlane;}
     public double getRotation() {return rotation;}
-
+    public Vector3D getAiming() {return aiming;}
+    public Vector3D getHorizontal() {return horizontal;}
+    public Vector3D getVertical() {return vertical;}
+    
     // Setters
     public void setPositionWorld(Vector3D positionWorld) {this.positionWorld = positionWorld;}
     public void setWidth(double width) {this.width = width;}
@@ -52,7 +69,7 @@ public class Camera{
 
     // Function to verify if an intersection with an object was within the visible volume, the frustum
     public boolean isInFrustum(double t){
-        return t>nearPlane && t<farPlane; // t is the distance from origin to an intersection
+        return t > nearPlane  &&  t < farPlane; // t is the distance from origin to an intersection
     }
 
     // Camera has to convert pixels (x,y) into a Ray. Good thing it has no perspective, yet
@@ -82,7 +99,7 @@ public class Camera{
         // normalizedPixelX = 0.5 -->  screenX = 0.0  (rigth in center)
         // normalizedPixelX = 1.0 -->  screenX = 1.0  (right bound)
 
-        double screenX = ((2* normalizedPixelX) - 1) * aspectRatio;
+        double screenX = ((2 * normalizedPixelX) - 1) * aspectRatio;
 
         // But in the width, above y=0 is out of bounds, so it cannot work as well as X
         // The values must respect these rules:
@@ -91,22 +108,25 @@ public class Camera{
         // normalizedPixelY = 0.5 -->  screenY = 0.0  (pixel center) --> as the normal increase, the height of pixel decreases
         // normalizedPixelY = 1.0 -->  screenY = -1.0  (pixel below bound) --> before goes to next pixel below, height of pixel is min
 
-        double screenY = 1 - (2* normalizedPixelY);
+        double screenY = 1 - (2 * normalizedPixelY);
 
-        // The ray's origin travels according to the pixel
-        // Because is a ortographic projection, Z is not needed directly
-        // Therefore, only X and Y changes along the pixels across the width and height
+        // Now, with the screenX and screenY, the camera can create a ray with the position of the camera 
+        // as origin and the direction to aim to the objects in the -Z axis
 
-        // In ortographic projection, all rays are paralels, in 2D it does not change the direction, changes where the ray came from
-        // All rays come from the same plane of the camera (in this case, its 2D)
-        Vector3D rayOrigin = new Vector3D(positionWorld.getX() + screenX, positionWorld.getY() + screenY, positionWorld.getZ());
+        // To implement the rotation in camera, the traditional rayOrigin must be modified.
+        // Before: origin = position + (screenX, screenY, 0) -> this only works without rotation:
+            // Vector3D rayOrigin = new Vector3D(positionWorld.getX() + screenX, positionWorld.getY() + screenY, positionWorld.getZ());
+        
+            // Now: origin = position + right*screenX + up*screenY:
+
+        Vector3D rayOrigin = positionWorld.vectorAddition(horizontal.scalarIt(screenX)).vectorAddition(vertical.scalarIt(screenY));
 
         // Ortographic projection means ALL rays aim to the -Z axis
         // The +Z axis would mean the rays would renderrr ME, not the objects
-        Vector3D rayDirection = new Vector3D(0,0,-1);
+        // But now, direction is not fixed, it can be altered: points where the camera is facing
+        // Before: Vector3D rayDirection = new Vector3D(0,0,-1);
 
-        // The return makes a new ray with the normalized and ortographic origin and the direction to aim the objects in -Z axis
-        return new Ray(rayOrigin, rayDirection);
+        // Now, with the variable direction:
+        return new Ray(rayOrigin, aiming);
     }
-
 }

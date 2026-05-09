@@ -53,8 +53,13 @@ public class Vector3D{
         // return Math.sqrt(productPoint(this));
     }
 
+    // Earlier normalization method was unoptimized. It called magnitude() 3 times and each one of the calls made a Math.sqrt
+    // With too many rays it will delay the render
+    // Before: return new Vector3D(x/magnitude(), y/magnitude(), z/magnitude());
+    // After:
     public Vector3D normalization(){
-        return new Vector3D(x/magnitude(), y/magnitude(), z/magnitude()); // divides the vector by its magnitude to normalize it (=1)
+        double mag = magnitude(); // Instead of calling 3 times magnitude(), a var takes its place to simplify the process
+        return new Vector3D(x/mag, y/mag, z/mag); // divides the vector by its magnitude to normalize it (=1)
     }
 
     public Vector3D rotateY(double commonAngle){
@@ -64,5 +69,14 @@ public class Vector3D{
         double rotatedZ = -1 * this.x * Math.sin(radians) + this.z * Math.cos(radians);
         // this.x = rotatedX; this.y = rotatedY; this.z = rotatedZ;
         return new Vector3D(rotatedX, rotatedY, rotatedZ);
+    }
+
+    // BoxesTreeNode auxiliary method
+    // Returns the component of the vector along the axis: 0=X, 1=Y, 2=Z
+    // Useful for generic code that operates on a variable axis
+    public double getComponent(int axis) {
+        if (axis == 0) return x;
+        if (axis == 1) return y;
+        return z; // If its not X axis nor Y axis, it is for discard Z axis
     }
 }

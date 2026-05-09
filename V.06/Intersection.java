@@ -3,8 +3,8 @@ public class Intersection{
     private final boolean collitionHappened; // boolean that says if there were a collition
     private final double t; // distance t that will be used in class Ray
     private final Vector3D hitPoint; // where does the ray hit
-    private final Vector3D normal;
-    private Object3D objectHit;
+    private final Vector3D normal; // the normal of the hitten object
+    private final Object3D objectHit; // the object that was hit
     
 
     // Thinking deeply, creating 2 constructors, one for collitionHappened is true and one if is not
@@ -28,6 +28,7 @@ public class Intersection{
         this.collitionHappened = false; // obviously, there was not a collition, that's whay of the second constructor
         this.t = -1; // -1 means there is no distance between ray origin and collition, because it never happened
         this.hitPoint = null; // collition = false --> hitPoint vector = null, no collition, no coords
+        this.objectHit = null; // collition = false --> objectHit = null, no collition, no object hit
         this.normal = null; // no collition = no normal of the hitten object (there is non)
     }
 

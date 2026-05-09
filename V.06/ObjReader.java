@@ -14,6 +14,8 @@ public class ObjReader {
     // These comments explain how the program decides which normal to use for each triangle:
     // Case 1: When the face already provides vertex normal (vn) indices.
     // Case 2: When there are no vn indices: Automatic smooth on everything
+
+    private static final long SMOOTH_KEY_MULT = 100000L; // Constant HashMap key
     
     public static List<TriangleIntersection> load(String filePath, Color color) {
         // Initializing a list to store the 3D coordinates of each vertex found in the file
@@ -156,7 +158,7 @@ public class ObjReader {
             // Adding this face normal to every vertex participating in this face and smoothing group
             for (int vi : faceIdx) {
                 // Creating a unique key by combining the vertex index and the smoothing group number
-                long key = (long) vi * 100000 + effectiveSG;
+                long key = (long) vi * SMOOTH_KEY_MULT + effectiveSG;
                 // If the key is new, put the normal in the map; otherwise, add the current normal to the existing one
                 if (!smoothedNormals.containsKey(key)) {
                     smoothedNormals.put(key, flatN); // first normal for this vertex and smoothing group
@@ -207,9 +209,9 @@ public class ObjReader {
                 else {
                     int effectiveSG = (sg == 0) ? 1 : sg;
                     // Fetching the averaged normals we computed earlier for each vertex
-                    Vector3D tn0 = smoothedNormals.get((long) ai * 1000 + effectiveSG); // normal for the pivot vertex
-                    Vector3D tn1 = smoothedNormals.get((long) bi * 1000 + effectiveSG); // normal for the second vertex
-                    Vector3D tn2 = smoothedNormals.get((long) ci * 1000 + effectiveSG); // normal for the third vertex
+                    Vector3D tn0 = smoothedNormals.get((long) ai * SMOOTH_KEY_MULT + effectiveSG); // normal for the pivot vertex
+                    Vector3D tn1 = smoothedNormals.get((long) bi * SMOOTH_KEY_MULT + effectiveSG); // normal for the second vertex
+                    Vector3D tn2 = smoothedNormals.get((long) ci * SMOOTH_KEY_MULT + effectiveSG); // normal for the third vertex
 
                     // Creating the triangle with smooth shading using averaged normals
                     triangles.add(new TriangleIntersection(tv0, tv2, tv1, color, tn0, tn2, tn1));
