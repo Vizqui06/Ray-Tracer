@@ -37,7 +37,8 @@ public class RayTracer {
                 // 3. Paint according the results
                 if (hit.isCollition_happened()) {
                     // Here is needed to know WHICH object was hit to take its color
-                    Color color = hit.getObjectHit().getColor(); // Gets the color from the object hitted -> OC: Color of object
+                    // Gets the color from the object hitted, now implementing the textures with the UVs
+                    Color color = hit.getObjectHit().rightColor(hit.getHitU(), hit.getHitV()); 
                     Vector3D normal = hit.getNormal(); // N: normal of the collition point
                     double red=0, green=0, blue=0; // RGB accumulators to add the contribution of ALL lights
 

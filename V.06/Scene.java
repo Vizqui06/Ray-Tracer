@@ -81,7 +81,7 @@ public class Scene {
         boundingVolumeHierarchyRoot = new BoxesTreeNode(triangles);
 
         long elapsed = System.currentTimeMillis() - start; // Time that took the Bounding Boxes process
-        System.out.println("\nBounding Volume Hierarchy built in " + elapsed + " ms. Bomboclat.");
+        System.out.println("\nBounding Volume Hierarchy built in " + elapsed + " ms.");
     }
 
 

@@ -5,23 +5,25 @@ import java.awt.Color; // import Color as
 
 public abstract class Object3D {
     private final Color color; // For the RGB colors when rendering
+    private Texture texture; // null means no texture --> flat color
 
-    public Object3D(Color color){ // Every object in a 3D space has a center and color (for rendering)
-        this.color = color;
-    }
+    // Every object in a 3D space has a center and color (for rendering)
+    public Object3D(Color color){ this.color = color;}
 
-    public Color getColor() {return color;} // a getter to know what color does the object has
+    // Getter and setter of textures and color
+    public Texture getTexture() {return texture;}
+    public void setTexture(Texture texture){this.texture = texture;}
+
+    // A getter to know what color does the object has
+    public Color getColor() {return color;} 
 
     public abstract Intersection intersect (Ray ray); // an abstract method so every child can be hit properly
-    // that was weird to write
-}
+    
 
-/*
-Constructor discarded due to too many attributes
-It is easier with the Color import
-public Object3D(double object_pos_x, double object_pos_y, double object_pos_z) {
-        this.object_pos_x = object_pos_x; // position of the object in X
-        this.object_pos_y = object_pos_y; // position of the object in Y
-        this.object_pos_z = object_pos_z; // position of the object in Z
+    // Helpful method for RayTracer to use it:
+    public Color rightColor(double u, double v) {
+        // If there is a texture, it will return the color of the texture at the uv coords of the texture image (PNG/JPG)
+        if (texture != null) return texture.sample(u, v);
+        return getColor(); // If there is NO texture, use default flat color, like always
     }
-*/
+}

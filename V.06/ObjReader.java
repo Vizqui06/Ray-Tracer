@@ -22,6 +22,10 @@ public class ObjReader {
         List<Vector3D> vertices = new ArrayList<>(); 
         // Initializing a list to store the explicit vertex normals defined by 'vn' lines
         List<Vector3D> normals = new ArrayList<>(); 
+        // Initializing a list to store the explicit vertex textures defined by 'vt' lines
+        List<Vector3D> uvCoords = new ArrayList<>();
+        // Initializing a list of integer arrays to store the UVs indices for each face
+        List<int[]> faceUVs = new ArrayList<>();
         // Initializing a list of integer arrays to store vertex indices for each face
         List<int[]> faces = new ArrayList<>(); 
         // Initializing a list of integer arrays to store normal indices for each face (if they exist)
@@ -65,6 +69,11 @@ public class ObjReader {
                                 Double.parseDouble(words[2]), // Y direction
                                 Double.parseDouble(words[3]) // Z direction
                         ).normalization()); // Ensuring the normal has a length of 1
+                    case "vt" -> 
+                        uvCoords.add(new Vector3D(
+                                Double.parseDouble(words[1]), // This is U component
+                                words.length > 2 ? Double.parseDouble(words[2]) : 0.0, // This is V component
+                                0.0)); // There is NO Z compinent in the UVs, an image (PNG/JPG) does not have a depth measure
                     case "s" -> {
                         // If the value is 'off' or '0', it means smoothing is disabled
                         if (words[1].equals("off") || words[1].equals("0")) {
@@ -81,14 +90,26 @@ public class ObjReader {
                         int[] faceIdx = new int[numVerts];
                         // Creating an array to store normal indices for this specific face
                         int[] normalIdx = new int[numVerts];
+                        // Creating an array to store texture indices for this specific face
+                        int[] textureIdx = new int[numVerts];
                         // Flag to track if this face actually contains vertex normal references
                         boolean hasVN = false;
+                        // Flag to track if this face actually contains vertex texture references
+                        boolean hasVT = false;
                         // Iterating through each vertex definition in the face line
                         for (int i = 1; i < words.length; i++) {
                             // Splitting the part (v/vt/vn) by the forward slash character
                             String[] parts = words[i].split("/", -1);
                             // Parsing the vertex index and converting it to 0-based indexing
                             faceIdx[i - 1] = Integer.parseInt(parts[0]) - 1;
+
+                            // Checking if the second part (the texture index) exists and is not empty
+                            if (parts.length >= 2 && !parts[1].isEmpty()) {
+                                // Parsing the texture index and converting it to 0-based indexing
+                                textureIdx[i - 1] = Integer.parseInt(parts[1]) - 1;
+                                // Setting thr flag to true because now it is known that this face uses explicit textures
+                                hasVT = true;
+                            } else {textureIdx[i - 1] = -1;} // Uses -1 to indicate that no texture index was provided for this vertex
                             
                             // Checking if the third part (the normal index) exists and is not empty
                             if (parts.length >= 3 && !parts[2].isEmpty()) {
@@ -104,11 +125,12 @@ public class ObjReader {
                         faces.add(faceIdx);
                         // Adding normal indices if present, or null if this face lacks normal data
                         faceNormals.add(hasVN ? normalIdx : null);
+                        // Adding texture indices if present, or null if this face lacks texture data
+                        faceUVs.add(hasVT ? textureIdx : null);
                         // Storing the smoothing group that was active when this face was defined
                         faceSmoothGroup.add(currentSmoothGroup);
                     }
-                    default -> {
-                    }
+                    default -> {} // If it is not any of the earlier components, ignore it
                 }
             } // End of the while loop reading lines
 
@@ -139,7 +161,7 @@ public class ObjReader {
         // First pass: Calculate the flat normals of faces and accumulate them for vertices in smoothing groups
         for (int fi = 0; fi < faces.size(); fi++) {
             // Skipping if the face already has explicit normals (Case 1)
-            if (faceNormals.get(fi) != null) { continue; } 
+            if (faceNormals.get(fi) != null) {continue;} 
 
             // Getting vertex indices and the smoothing group ID for the current face
             int[] faceIdx = faces.get(fi); // vertex indices for this face
@@ -183,6 +205,7 @@ public class ObjReader {
             // Extracting indices for vertices and normals, and the smoothing group for the current face
             int[] faceIdx = faces.get(fi); // vertex indices for this face
             int[] normIdx = faceNormals.get(fi); // normal indices for this face (if they exist)
+            int[] textureIdx =faceUVs.get(fi);
             int sg = faceSmoothGroup.get(fi); // smoothing group for this face
 
             // Converting polygons (n-gons) into triangles using the triangle fan method (pivot at index 0)
@@ -194,16 +217,22 @@ public class ObjReader {
                 Vector3D tv1 = centeredVertices.get(bi); // the second vertex (lower left vertex in the triangle fan)
                 Vector3D tv2 = centeredVertices.get(ci); // the third vertex (lower right vertex in the triangle fan)
 
-                // Case 1: When the face defines its own specific vertex normals
+                Vector3D tuv0 = null, tuv1 = null, tuv2 = null;
+                if (textureIdx != null) {
+                    tuv0 = uvCoords.get(textureIdx[0]);
+                    tuv1 = uvCoords.get(textureIdx[i]);
+                    tuv2 = uvCoords.get(textureIdx[i + 1]);
+                }
+
+                // Case 2: When the face defines its own specific vertex normals
                 if (normIdx != null) {
                     // Fetching the pre-defined normals from the list
                     Vector3D tn0 = normals.get(normIdx[0]); // normal for the pivot vertex
                     Vector3D tn1 = normals.get(normIdx[i]); // normal for the second vertex
                     Vector3D tn2 = normals.get(normIdx[i + 1]); // normal for the third vertex
 
-                    // Creating the triangle with smooth shading using explicit normals
-                    triangles.add(new TriangleIntersection(tv0, tv2, tv1, color, tn0, tn2, tn1));
-
+                    // Creating the triangle with smooth shading using explicit normals and textures (if have)
+                    triangles.add(new TriangleIntersection(tv0, tv2, tv1, color, tn0, tn2, tn1, tuv0, tuv2, tuv1));
                 } 
                 // Case 2: Automatic smooth (with or without S groups)
                 else {
@@ -213,8 +242,8 @@ public class ObjReader {
                     Vector3D tn1 = smoothedNormals.get((long) bi * SMOOTH_KEY_MULT + effectiveSG); // normal for the second vertex
                     Vector3D tn2 = smoothedNormals.get((long) ci * SMOOTH_KEY_MULT + effectiveSG); // normal for the third vertex
 
-                    // Creating the triangle with smooth shading using averaged normals
-                    triangles.add(new TriangleIntersection(tv0, tv2, tv1, color, tn0, tn2, tn1));
+                    // Creating the triangle with smooth shading using averaged normals and textures (if have)
+                    triangles.add(new TriangleIntersection(tv0, tv2, tv1, color, tn0, tn2, tn1, tuv0, tuv2, tuv1));
                 }
             }
         }

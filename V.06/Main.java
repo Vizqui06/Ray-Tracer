@@ -53,9 +53,9 @@ public class Main {
                 //     Z: depth. It should be between nearPlane and farPlane of the camera
                 //        With camera at Z=5 and objects at Z=0, t around 5 --> the sphere is inside the frustum
 
-                scene.addObject(new Sphere(0.12, new Vector3D(0.84, -0.6, 0.5), Color.RED)); // add a red sphere with its parameters
-                scene.addObject(new Sphere(0.17, new Vector3D(0.8, 0.6, 0), Color.BLUE)); // add a blue sphere with its parameters
-                scene.addObject(new Sphere(0.15, new Vector3D(-0.6, 0.5, 0), Color.GREEN)); // add a green sphere with its parameters
+                scene.addObject(new Sphere(0.12, new Vector3D(0.84, -0.6, 0.0), Color.RED)); // add a red sphere with its parameters
+                scene.addObject(new Sphere(0.17, new Vector3D(0.8, 0.6, 0.0), Color.BLUE)); // add a blue sphere with its parameters
+                scene.addObject(new Sphere(0.15, new Vector3D(-0.6, 0.5, 0.0), Color.GREEN)); // add a green sphere with its parameters
 
 
         // Triangle (v0, v1, v2, center, color)
@@ -91,12 +91,14 @@ public class Main {
 
         // PD: Have mercy with your computer by the number of polygons
 
+                // Loading of textures:
+                Texture texMonky = new Texture("Textures/textMonke.jpg");
 
                 // Just load the object (at this point, it is centered at the origin and its scale is 1.0x)
                 List<TriangleIntersection> defaultMonky = ObjReader.load("Models/Monky.obj", Color.YELLOW);
                 //List<TriangleIntersection> defaultCotton = ObjReader.load("Models/Cotton.obj", Color.MAGENTA);
                 List<TriangleIntersection> defaultPot = ObjReader.load("Models/Pot.obj", Color.CYAN);
-                
+
 
         // MODEL3D SETTINGS
         // Model3D(triangles, position, scale, Y-axis-rotation)
@@ -116,8 +118,8 @@ public class Main {
         // 270° = turned 90° to the left
 
                 //Model3D modelCotton = new Model3D(new Vector3D(0.21, -0.1, 2), 1.4, 45.0, defaultCotton);
-                Model3D modelPot = new Model3D(new Vector3D(-0.62, -0.32, 2), 0.4, 180.0, defaultPot);
-                Model3D modelMonky = new Model3D(new Vector3D(0.42, 0.15, 2), 0.5, 90, defaultMonky);
+                Model3D modelPot = new Model3D(new Vector3D(-0.62, -0.32, 0), 0.4, 180.0, defaultPot);
+                Model3D modelMonky = new Model3D(new Vector3D(0.42, 0.15, 0), 0.5, 90, defaultMonky);
 
                 // Requirements: 
                 // List of triangles (the default model of ObjReader)
@@ -125,6 +127,12 @@ public class Main {
                 modelMonky.addToScene(scene);
                 //modelCotton.addToScene(scene);
                 modelPot.addToScene(scene);
+
+
+                // Application of textures:
+                for (TriangleIntersection tri : modelMonky.getTriangles()) {
+                       tri.setTexture(texMonky);
+                }
 
         // Directional light settings:
         // Light(direction, color, intensity)
@@ -140,7 +148,7 @@ public class Main {
 
                 scene.addLight(new LightLambertian(new Vector3D(0.0, 3.0, 4.0), Color.WHITE, 1.0));
                 //scene.addLight(new LightPhong(new Vector3D(0.0, 3.0, 4.0), Color.WHITE, 1.0, 40.0));
-                //scene.addLight(new LightPoint(null, Color.WHITE, 1.0, new Vector3D(0.0, 6.0, 4.0)));
+                //scene.addLight(new LightPoint(null, Color.WHITE, 1.0, new Vector3D(0.0, 1.0, 3.0)));
 
 
                 // The direction of the light will be normalized, the values mean that the light comes from the upper front of the scene 
@@ -156,6 +164,6 @@ public class Main {
 
                 // Render with white background (doesn't matter the color of the background)
                 RayTracer raytracer = new RayTracer(camera, scene, Color.BLACK); // Change manually the color of background
-                raytracer.render("Renders/Ray-Tracer_V06_BoundingBoxes.png");
+                raytracer.render("Renders/Ray-Tracer_V06_Textures.png");
         }
 }

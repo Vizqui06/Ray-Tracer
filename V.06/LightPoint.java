@@ -27,7 +27,7 @@ public class LightPoint extends Light{
 
         // Attenuation: light fades with the square of the distance (physically accurate)
         // 1 / (1 + k * d^2) -> where k controls how fast it fades; k=0 means no attenuation
-        double factorAtenuation = 0.14; // Can be modified
+        double factorAtenuation = 0.2; // Can be modified
         double attenuation = 1.0 / (1.0 + factorAtenuation * Math.pow(distanceLight, 2));
 
         // Diffuse = LC * OC * LI * (N · L) * attenuation
