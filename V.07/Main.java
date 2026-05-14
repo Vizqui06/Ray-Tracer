@@ -42,30 +42,6 @@ public class Main {
                 // Values beyond these limits will make the objects seen by half or dissappear from the scene
 
 
-                // SHADOW FLAT SURFACE:
-                // Set a large and flat surface/plane to recieve the shadows; shadows cannot been seen in voids, like previous renders
-                // Two triangles forming a rectangle on the Y=-0.5 level (adjust Y to your scene)
-                // Made large enough to cover the area visible from the camera
-                // The plane will be made out of two rectangle triangles
-
-                // FLAT SURFACE COLOCATION IN PROGRESS... IT IS HARD TO SET A PLANE
-
-                /* 
-                scene.addObject(new TriangleIntersection(
-                new Vector3D(-4, -1.57,  4), // v0 vertex
-                new Vector3D( 4, -1.57,  4), // v1 vertex
-                new Vector3D( 4, -1.57, -4), // v2 vertex
-                Color.WHITE // color of the triangle
-                ));
-
-                scene.addObject(new TriangleIntersection(
-                new Vector3D(-4, -1.57,  4), // v0 vertex
-                new Vector3D( 4, -1.57, -4), // v1 vertex
-                new Vector3D(-4, -1.57, -4), // v2 vertex
-                Color.WHITE // color of the triangle
-                ));
-                */
-
                 // OBJECTS SETTINGS:
 
                 // Sphere(radio, center, color)
@@ -78,9 +54,9 @@ public class Main {
                 //     Z: depth. It should be between nearPlane and farPlane of the camera
                 //        With camera at Z=5 and objects at Z=0, t around 5 --> the sphere is inside the frustum
 
-                scene.addObject(new Sphere(0.3, new Vector3D(0.3, -0.51, -2.0), Color.RED)); // add a red sphere with its parameters
-                scene.addObject(new Sphere(0.3, new Vector3D(0.8, -0.35, -2.0), Color.BLUE)); // add a blue sphere with its parameters
-                scene.addObject(new Sphere(0.3, new Vector3D(-0.8, -0.38, -2.0), Color.GREEN)); // add a green sphere with its parameters
+                scene.addObject(new Sphere(0.22, new Vector3D(0.35, -0.35, -2.0), Color.RED)); // add a red sphere with its parameters
+                scene.addObject(new Sphere(0.25, new Vector3D(0.8, -0.35, -2.0), Color.BLUE)); // add a blue sphere with its parameters
+                scene.addObject(new Sphere(0.3, new Vector3D(-0.85, -0.35, -2.3), Color.GREEN)); // add a green sphere with its parameters
 
 
         // Triangle (v0, v1, v2, center, color)
@@ -99,10 +75,24 @@ public class Main {
         // Useful size: difference between vertices from 0.5 to 2.0 units
         // The triangle is defined in the direction: up -> down-left -> down-right
 
-                //scene.addObject(new TriangleIntersection(
-                //new Vector3D(0, 0.2, 0), new Vector3D(-0.3, -0.2, 0), new Vector3D(0.3, -0.2, 0), Color.CYAN));
+                // For some reason, to be able to put triangles, I have to initialize this first so the others can be visible
+                scene.addObject(new TriangleIntersection(
+                new Vector3D(0.0, 0.2, 10.0), new Vector3D(-0.3, -0.2, 10.0), new Vector3D(0.3, -0.2, 10.0), Color.BLACK));
 
 
+                // SHADOW FLAT SURFACE:
+                // Set a large and flat surface/plane to recieve the shadows; shadows cannot been seen in voids, like previous renders
+                // Two triangles forming a rectangle on the Y=-0.5 level (adjust Y to your scene)
+                // Made large enough to cover the area visible from the camera
+                // The plane will be made out of two rectangle triangles
+
+                // FLAT SURFACE COLOCATION IN PROGRESS... IT IS HARD TO SET A PLANE
+
+                scene.addObject(new TriangleIntersection(
+                new Vector3D(-1.2, -0.8, -4.0), new Vector3D(-1.3, -0.5, 0.0), new Vector3D(1.3, -0.5, 0.0), Color.DARK_GRAY));
+
+                scene.addObject(new TriangleIntersection(
+                new Vector3D(1.2, -0.8, -4.0), new Vector3D(-1.2, -0.8, -4.0), new Vector3D(1.3, -0.5, 0.0), Color.DARK_GRAY));
 
 
         // OBJ MODELS SETTINGS
@@ -142,9 +132,9 @@ public class Main {
         // 180° = it depends, but hopefully, looking towards the camera (-Z)
         // 270° = turned 90° to the left
 
-                Model3D modelCotton = new Model3D(new Vector3D(0.0, -0.3, -0.6), 0.5, 45.0, defaultCotton);
-                Model3D modelPot = new Model3D(new Vector3D(-0.5, -0.3, -1.0), 0.35, 180.0, defaultPot);
-                Model3D modelMonky = new Model3D(new Vector3D(0.42, -0.3, -1.0), 0.3, 90, defaultMonky);
+                Model3D modelCotton = new Model3D(new Vector3D(-0.2, -0.1, -1.6), 0.9, 85.0, defaultCotton);
+                Model3D modelPot = new Model3D(new Vector3D(-0.5, -0.2, -1.0), 0.35, 150.0, defaultPot);
+                Model3D modelMonky = new Model3D(new Vector3D(0.35, -0.2, -1.0), 0.3, 110, defaultMonky);
 
                 // Requirements: 
                 // List of triangles (the default model of ObjReader)
@@ -171,17 +161,16 @@ public class Main {
                 //scene.addLight(new LightLambertian(new Vector3D(0.0, 2.0, 3.0), Color.WHITE, 1.0));
                 //scene.addLight(new Light(new Vector3D(3.0, -7.0, 2.0), Color.WHITE, 1.0));
 
-                //scene.addLight(new LightLambertian(new Vector3D(4.0, 5.0, 8.0), Color.WHITE, 1.0));
+                //scene.addLight(new LightLambertian(new Vector3D(0.0, 1.0, -1.0), Color.WHITE, 1.0));
                 //scene.addLight(new LightPhong(new Vector3D(0.0, 3.0, 4.0), Color.WHITE, 1.0, 40.0));
+                scene.addLight(new LightPhong(new Vector3D(0.0, 7.0, 0.5), Color.WHITE, 0.5, 40.0));
                 scene.addLight(new LightPoint(null, Color.WHITE, 1.0, new Vector3D(0.0, 0.0, 0.5)));
+                scene.addLight(new LightPoint(null, Color.WHITE, 1.0, new Vector3D(0.0, 0.2, -0.7)));
 
 
                 // The direction of the light will be normalized, the values mean that the light comes from the upper front of the scene 
                 // (from user to the far away, and from up to down)
-                // The color of the light is WHITE, its intensity is at max (drastic difference in lights/shadows)
-
-
-                
+                // The color of the light is WHITE, its intensity is at max (drastic difference in lights/shadows)                
 
 
                 // Builds the Bounding Volume Hierarchy with ALL the triangles that are already added
