@@ -10,7 +10,8 @@ public class Model3D {
     // position: where you want the object in the scene
     // scale: 1.0 = original size, 0.5 = half, 2.0 = double
     // rotationY: in degrees -> 0 = look towards +Z, 180 = look towards -Z (towards the camera)
-    public Model3D(Vector3D position, double scale, double rotationY, List<TriangleIntersection> rawTriangles) {
+    public Model3D(Vector3D position, double scale, double rotationY, List<TriangleIntersection> rawTriangles, 
+                    double refLEctivity, double refRActivity, double refractiveIndex) {
         this.position = position;
         this.scale = scale;
         this.rotationY = rotationY;
@@ -46,15 +47,15 @@ public class Model3D {
 
             // If there are per-vertex normals, create the triangle with them for smooth shading
             if (n0 != null && n2 != null && n1 != null && uv0 != null && uv2 != null && uv1 != null) { 
-                transformed.add(new TriangleIntersection(v0, v2, v1, triangle.getColor(), n0, n2, n1, uv0, uv2, uv1));
+                transformed.add(new TriangleIntersection(v0, v2, v1, triangle.getColor(), 0.4,0,0, n0, n2, n1, uv0, uv2, uv1));
             }
 
             else if (n0 != null && n2 != null && n1 != null) { // If there are per-vertex normals, create the triangle with them for smooth shading
-                transformed.add(new TriangleIntersection(v0, v2, v1, triangle.getColor(), n0, n2, n1));
+                transformed.add(new TriangleIntersection(v0, v2, v1, triangle.getColor(), 0.75, 0, 0, n0, n2, n1));
             } 
             
             else { // If there are no per-vertex normals nor textures, create the triangle without them for flat shading
-                transformed.add(new TriangleIntersection(v0, v2, v1, triangle.getColor()));
+                transformed.add(new TriangleIntersection(v0, v2, v1, triangle.getColor(), 0.75, 0, 0));
             }
         }
         return transformed;

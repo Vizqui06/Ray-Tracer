@@ -5,8 +5,8 @@ public class Sphere extends Object3D{
     private final double radius;
     private final Vector3D center;
     
-    public Sphere (double radius, Vector3D center, Color color){
-        super(color);
+    public Sphere (double radius, Vector3D center, Color color, double refLEctivity, double refRActivity, double refractiveIndex){
+        super(color, refLEctivity, refRActivity, refractiveIndex);
         this.center = center; 
         this.radius = radius;
     }

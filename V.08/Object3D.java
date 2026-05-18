@@ -6,19 +6,36 @@ import java.awt.Color; // import Color as
 public abstract class Object3D {
     private final Color color; // For the RGB colors when rendering
     private Texture texture; // null means no texture --> flat color
+    private double refLEctivity = 0.0; // 0.0 = no reflection, 1.0 = perfect mirror
+    private double refRActivity = 0.0; // // 0.0 = opaque, 1.0 = fully transparent (for V.09)
+    private double refractiveIndex = 1.0; // index of refraction: air=1.0, glass=1.5, water=1.33
 
     // Every object in a 3D space has a center and color (for rendering)
-    public Object3D(Color color){ this.color = color;}
+    public Object3D(Color color, double refLEctivity, double refRActivity, double refractiveIndex) {
+        this.color = color;
+        this.refLEctivity = refLEctivity;
+        this.refRActivity = refRActivity;
+        this.refractiveIndex = refractiveIndex;
+    }
 
     // Getter and setter of textures and color
     public Texture getTexture() {return texture;}
-    public void setTexture(Texture texture){this.texture = texture;}
+    public void setTexture(Texture texture) {this.texture = texture;}
 
     // A getter to know what color does the object has
     public Color getColor() {return color;} 
 
-    public abstract Intersection intersect (Ray ray); // an abstract method so every child can be hit properly
-    
+    // Getter and Setters for reflection and refraction
+    public double getRefLEctivity() {return refLEctivity;}
+    public double getRefRActivity() {return refRActivity;}
+    public double getRefractiveIndex() {return refractiveIndex;}
+
+    public void setRefLEctivity(double refLEctivity) {this.refLEctivity = refLEctivity;}
+    public void setRefRActivity(double refRActivity) {this.refRActivity = refRActivity;}
+    public void setRefractiveIndex(double refractiveIndex) {this.refractiveIndex = refractiveIndex;}
+
+    // An abstract method so every child can be hit properly
+    public abstract Intersection intersect (Ray ray); 
 
     // Helpful method for RayTracer to use it:
     public Color rightColor(double u, double v) {

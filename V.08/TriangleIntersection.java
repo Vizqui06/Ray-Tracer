@@ -25,16 +25,16 @@ public class TriangleIntersection extends Object3D{
     private Vector3D uv0, uv1, uv2;
     
     // Default constructor (with NEITHER smooth shading NOR textures)
-    public TriangleIntersection(Vector3D v0, Vector3D v1, Vector3D v2, Color color){
-        super(color); // Color from Object3D parameter
+    public TriangleIntersection(Vector3D v0, Vector3D v1, Vector3D v2, Color color, double refLEctivity, double refRActivity, double refractiveIndex){
+        super(color, refLEctivity, refRActivity, refractiveIndex); // Color from Object3D parameter
         this.v0 = v0;
         this.v1 = v1;
         this.v2 = v2;
     }
 
     // Constructor with per-vertex normals (to apply the smooth shading)
-    public TriangleIntersection(Vector3D v0, Vector3D v1, Vector3D v2, Color color, Vector3D n0, Vector3D n1, Vector3D n2){
-        super(color); // Color from Object3D parameter
+    public TriangleIntersection(Vector3D v0, Vector3D v1, Vector3D v2, Color color, double refLEctivity, double refRActivity, double refractiveIndex, Vector3D n0, Vector3D n1, Vector3D n2){
+        super(color, refLEctivity, refRActivity, refractiveIndex); // Color from Object3D parameter
         // Triangle's vertices
         this.v0 = v0; this.v1 = v1; this.v2 = v2;
         // Pre-vertices for normals
@@ -42,8 +42,8 @@ public class TriangleIntersection extends Object3D{
     }
 
     // Constructor with textures (to appliy the texture of the obj, as well as applying smooth shading)
-    public TriangleIntersection(Vector3D v0, Vector3D v1, Vector3D v2, Color color, Vector3D n0, Vector3D n1, Vector3D n2, Vector3D uv0, Vector3D uv1, Vector3D uv2) {
-        super(color); // Color from Object3D parameter
+    public TriangleIntersection(Vector3D v0, Vector3D v1, Vector3D v2, Color color, double refLEctivity, double refRActivity, double refractiveIndex, Vector3D n0, Vector3D n1, Vector3D n2, Vector3D uv0, Vector3D uv1, Vector3D uv2) {
+        super(color, refLEctivity, refRActivity, refractiveIndex); // Color from Object3D parameter
         // Triangle's vertices
         this.v0 = v0; this.v1 = v1; this.v2 = v2;
         // Pre-vertices for normals

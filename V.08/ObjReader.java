@@ -232,7 +232,7 @@ public class ObjReader {
                     Vector3D tn2 = normals.get(normIdx[i + 1]); // normal for the third vertex
 
                     // Creating the triangle with smooth shading using explicit normals and textures (if have)
-                    triangles.add(new TriangleIntersection(tv0, tv2, tv1, color, tn0, tn2, tn1, tuv0, tuv2, tuv1));
+                    triangles.add(new TriangleIntersection(tv0, tv2, tv1, color, 0,0,0, tn0, tn2, tn1, tuv0, tuv2, tuv1));
                 } 
                 // Case 2: Automatic smooth (with or without S groups)
                 else {
@@ -243,7 +243,7 @@ public class ObjReader {
                     Vector3D tn2 = smoothedNormals.get((long) ci * SMOOTH_KEY_MULT + effectiveSG); // normal for the third vertex
 
                     // Creating the triangle with smooth shading using averaged normals and textures (if have)
-                    triangles.add(new TriangleIntersection(tv0, tv2, tv1, color, tn0, tn2, tn1, tuv0, tuv2, tuv1));
+                    triangles.add(new TriangleIntersection(tv0, tv2, tv1, color, 0, 0, 0, tn0, tn2, tn1, tuv0, tuv2, tuv1));
                 }
             }
         }

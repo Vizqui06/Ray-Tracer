@@ -1,13 +1,17 @@
 // Scene is the container of the world. 
 // Its job is to save all the objects and answer a single question: "what object does this ray hitsfirst?
 
-import java.util.ArrayList; // for knowing what colors does each one of the objects has
+import java.awt.Color; // for knowing what colors does each one of the objects has
+import java.util.ArrayList;
 import java.util.List;
 
 public class Scene {
     private final ArrayList<Object3D> objects; // Objects list of non-triangle objects (after Bounding Boxes)
     private final ArrayList<Light> lights; // Lights list of the scene
     private final Camera camera; // Takes camera as an object to confirm if its method "isInFrustum" is true or false in each "hit" evaluation
+
+    // Max reflection bounces: 2 minimum (have to take care of my laptop)
+    private static final int MAX_BOUNCES = 5;
 
     // The Bounding Volume Hierarchy tree, which contains all the triangles within the scene
     private BoxesTreeNode boundingVolumeHierarchyRoot;
@@ -154,5 +158,52 @@ public class Scene {
 
         if(closest == null){return new Intersection();} // if there was no closest, there was no collition
         return closest; // if there was, return it and git good
+    }
+
+
+    // RefLEction functions:
+    public Color bounceRay(Ray ray, int bounces, Color backgroundColor){
+        Intersection hit = intersect(ray);
+        if(!hit.isCollition_happened()) {return backgroundColor;}
+        return shade(hit, ray, bounces, backgroundColor);
+    }
+
+    private Color shade (Intersection hit, Ray ray, int bounce, Color backgroundColor){
+        Object3D obj = hit.getObjectHit();
+        Vector3D normal = hit.getNormal();
+        Color surfaceColor = obj.rightColor(hit.getHitU(), hit.getHitV()); 
+        double red=0, green=0, blue=0;
+
+        for (Light light : lights){ 
+            Vector3D directionToLight = light.getDirectionToLight(hit.getHitPoint());
+            double distanceToLight = light.getDistanceToLight(hit.getHitPoint());
+
+            if(IsInShadow(hit.getHitPoint(), directionToLight, distanceToLight)){continue;}
+
+            Color contribution = light.makeColor(normal, hit.getHitPoint(), surfaceColor, camera);
+            red += contribution.getRed() / 255.0;
+            green += contribution.getGreen() / 255.0;
+            blue += contribution.getBlue() / 255.0;
+        }
+
+        red = Math.min(1.0, red);
+        green = Math.min(1.0, green);
+        blue = Math.min(1.0, blue);
+
+        // Reflection: spawn a new ray in the mirrored direction if budget allows
+        double reflectivity = obj.getRefLEctivity();
+        if (reflectivity > 0.0 && bounce < MAX_BOUNCES) {
+            Vector3D D = ray.getDirection();
+            // R = D - 2(D·N)N
+            Vector3D reflectedDir = D.vectorSubstraction(normal.scalarIt(2.0 * D.productPoint(normal)));
+            Vector3D reflectedOrigin = hit.getHitPoint().vectorAddition(normal.scalarIt(1e-4));
+            Color reflectedColor = bounceRay(new Ray(reflectedOrigin, reflectedDir), bounce + 1, backgroundColor);
+
+            // Blend: surface color scaled down by reflectivity, reflection scaled up
+            red = red * (1.0 - reflectivity) + (reflectedColor.getRed() / 255.0) * reflectivity;
+            green = green * (1.0 - reflectivity) + (reflectedColor.getGreen() / 255.0) * reflectivity;
+            blue = blue * (1.0 - reflectivity) + (reflectedColor.getBlue() / 255.0) * reflectivity;
+        }
+        return new Color((int)(red * 255), (int)(green * 255), (int)(blue * 255));
     }
 }
