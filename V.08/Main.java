@@ -27,15 +27,15 @@ public class Main {
                 // Camera in Z = 5, looking at -Z axis (the scene and not me)
                 // nearPlane of 0.1 is very close, farPlane of 100 is decently far
                 Camera camera = new Camera(new Vector3D(
-                        0.0, 0.0, 9.0), // position
-                        800.0, // temp low resolution for tests
-                        600.0, // temp low resolution for tests
-                        //4096.0, // width (in 4k)
-                        //2160.0, //height (in 4k)
+                        0.0, 2.2, 10.0), // position
+                        //800.0, // temp low resolution for tests
+                        //600.0, // temp low resolution for tests
+                        4096.0, // width (in 4k)
+                        2160.0, //height (in 4k)
                         0.01, //near plane
                         100.0, //far plane
                         0.0, // Y rotation (negative values to look at left)
-                        -15.0 // X rotation (negative values to look down)
+                        -10.0 // X rotation (negative values to look down)
                 ); 
 
                 // Scene with 2 spheres
@@ -56,9 +56,9 @@ public class Main {
                 //     Z: depth. It should be between nearPlane and farPlane of the camera
                 //        With camera at Z=5 and objects at Z=0, t around 5 --> the sphere is inside the frustum
 
-                scene.addObject(new Sphere(0.5, new Vector3D(-3.0, -1.0, -3.5), Color.RED)); // add a red sphere with its parameters
-                scene.addObject(new Sphere(0.4, new Vector3D(1.5, 0.5, -2.5), Color.BLUE)); // add a blue sphere with its parameters
-                scene.addObject(new Sphere(0.3, new Vector3D(-2.85, -1.35, -2.3), Color.GREEN)); // add a green sphere with its parameters
+                scene.addObject(new Sphere(0.22, new Vector3D(0.35, 0.35, -2.3), Color.RED)); // add a red sphere with its parameters
+                scene.addObject(new Sphere(0.25, new Vector3D(-0.2, 0.55, -2.0), Color.PINK)); // add a pink sphere with its parameters
+                scene.addObject(new Sphere(0.3, new Vector3D(-0.85, 0.9, 0.3), Color.GREEN)); // add a green sphere with its parameters
 
 
         // Triangle (v0, v1, v2, center, color)
@@ -78,41 +78,37 @@ public class Main {
         // The triangle is defined in the direction: up -> down-left -> down-right
 
                 // Vertices for the box to "inbox" the objects inside the box
-
-                Vector3D NLLV = new Vector3D(-4.0, -4.0, 10.0); // Near Lower Left Vertex
-                Vector3D NLRV = new Vector3D(4.0, -4.0, 1.0); // Near Lower Right Vetrex
-                Vector3D NULV = new Vector3D(-4.0, 4.0, 10.0); // Near Upper Left Vertex
-                Vector3D NURV = new Vector3D(4.0, 4.0, 10.0); // Near Upper Right Vertex
-                Vector3D FLLV = new Vector3D(-4.0, -4.0, -4.0); // Far Lower Left Vertex
-                Vector3D FLRV = new Vector3D(4.0, -4.0, -4.0); // Far Lower Right Vertex
-                Vector3D FULV = new Vector3D(-4.0, 4.0, -4.0); // Far Upper Left Vertex
-                Vector3D FURV = new Vector3D(4.0, 4.0, -4.0); // Far Upper Right Vertex
+                // Box: X -6 to +6, Y -4 to +5, Z -4 to +7
+                Vector3D NLLV = new Vector3D(-1.3, -0.5, 0.0); // Near Lower Left --
+                Vector3D NLRV = new Vector3D(1.3, -0.5, 0.0); // Near Lower Right --
+                Vector3D NULV = new Vector3D(-1.5, 1.8, 0.0); // Near Upper Left --
+                Vector3D NURV = new Vector3D(1.5, 1.8, 0.0); // Near Upper Right --
+                Vector3D FLLV = new Vector3D(-1.2, -0.8, -4.0); // Far Lower Left --
+                Vector3D FLRV = new Vector3D(1.2, -0.8, -4.0); // Far Lower Right --
+                Vector3D FULV = new Vector3D(-1.2, 1.0, -2.0); // Far Upper Left --
+                Vector3D FURV = new Vector3D(1.2, 1.0, -2.0); // Far Upper Right --
 
 
                 // SHADOW FLAT SURFACE:
-                scene.addObject(new TriangleIntersection(FLLV, NLLV, NLRV, Color.GRAY)); // Left half flat surface
-                scene.addObject(new TriangleIntersection(FLRV, FLLV, NLRV, Color.GRAY)); // Right half flat surface
+                scene.addObject(new TriangleIntersection(FLLV, NLLV, NLRV, Color.YELLOW)); // Left half flat surface
+                scene.addObject(new TriangleIntersection(FLRV, FLLV, NLRV, Color.YELLOW)); // Right half flat surface
 
                 // WALLS TO COVER THE SCENE:
                 // RIGHT
-                scene.addObject(new TriangleIntersection(FURV, FLRV, NLRV, Color.GRAY));
-                scene.addObject(new TriangleIntersection(NURV, FURV, NLRV, Color.GRAY));
+                scene.addObject(new TriangleIntersection(FURV, FLRV, NLRV, Color.BLUE));
+                scene.addObject(new TriangleIntersection(NURV, FURV, NLRV, Color.BLUE));
 
                 // LEFT
-                scene.addObject(new TriangleIntersection(FULV, NLLV, FLLV, Color.GRAY));
-                scene.addObject(new TriangleIntersection(NULV, NLLV, FULV, Color.GRAY));
+                scene.addObject(new TriangleIntersection(FULV, NLLV, FLLV, Color.BLUE));
+                scene.addObject(new TriangleIntersection(NULV, NLLV, FULV, Color.BLUE));
 
                 // BACK:
-                scene.addObject(new TriangleIntersection(FULV, FLLV, FLRV, Color.GRAY));
-                scene.addObject(new TriangleIntersection(FURV, FULV, FLRV, Color.GRAY));
+                scene.addObject(new TriangleIntersection(FULV, FLLV, FLRV, Color.BLUE));
+                scene.addObject(new TriangleIntersection(FURV, FULV, FLRV, Color.BLUE));
 
                 // TOP (inverted normals to see the roof):
-                scene.addObject(new TriangleIntersection(FULV, NURV, NULV, Color.GRAY));
-                scene.addObject(new TriangleIntersection(FURV, NURV, FULV, Color.GRAY));
-
-                // FRONT:
-                scene.addObject(new TriangleIntersection(NLRV, NLLV, NULV, Color.GRAY));
-                scene.addObject(new TriangleIntersection(NLRV, NURV, NULV, Color.GRAY));
+                scene.addObject(new TriangleIntersection(FULV, NURV, NULV, Color.WHITE));
+                scene.addObject(new TriangleIntersection(FURV, NURV, FULV, Color.WHITE));
 
 
         // OBJ MODELS SETTINGS
@@ -152,9 +148,9 @@ public class Main {
         // 180° = it depends, but hopefully, looking towards the camera (-Z)
         // 270° = turned 90° to the left
 
-                Model3D modelCotton = new Model3D(new Vector3D(0.0, -2.0, -2.0), 0.9, 85.0, defaultCotton);
-                Model3D modelPot = new Model3D(new Vector3D(-2.0, -3.0, -2.0), 0.5, 150.0, defaultPot);
-                Model3D modelMonky = new Model3D(new Vector3D(2.5, 2.5, 3.0), 0.8, 110, defaultMonky);
+                Model3D modelCotton = new Model3D(new Vector3D(0.95, 0.7, -1.6), 0.9, 85.0, defaultCotton);
+                Model3D modelPot = new Model3D(new Vector3D(-0.6, -0.2, -0.12), 0.50, 150.0, defaultPot);
+                Model3D modelMonky = new Model3D(new Vector3D(0.40, -0.4, -2.5), 0.5, 110, defaultMonky);
 
                 // Requirements: 
                 // List of triangles (the default model of ObjReader)
@@ -176,18 +172,16 @@ public class Main {
         // comes from the front of the scene (from user to the far away)
         // Useful range for intensity: 0.0 to 1.0
 
-                //scene.addLight(new LightLambertian(new Vector3D(0.0, 2.0, 3.0), Color.WHITE, 1.0));
-                //scene.addLight(new Light(new Vector3D(3.0, -7.0, 2.0), Color.WHITE, 1.0));
+                /*
+                scene.addLight(new LightPhong(new Vector3D(0.0, 0.5, 4.0), Color.WHITE, 1.0, 80.0));
+                scene.addLight(new LightPoint(null, Color.WHITE, 2.0, new Vector3D( -0.4, 0.5, -0.8)));
+                scene.addLight(new LightPoint(null, Color.WHITE, 1.5, new Vector3D(-0.2, 0.8, 2.0)));
+                scene.addLight(new LightPoint(null, Color.WHITE, 1.5, new Vector3D( 0.0, -0.5, 2.8)));
+                */
 
-                //scene.addLight(new LightLambertian(new Vector3D(0.0, 1.0, -1.0), Color.WHITE, 1.0));
-                //scene.addLight(new LightPhong(new Vector3D(0.0, 3.0, 4.0), Color.WHITE, 1.0, 40.0));
-                scene.addLight(new LightPhong(new Vector3D(0.0, 2.0, 9.8), Color.WHITE, 0.5, 40.0));
-                scene.addLight(new LightPoint(null, Color.WHITE, 1.0, new Vector3D(0.0, 0.0, 0.0)));
-                scene.addLight(new LightPoint(null, Color.WHITE, 1.0, new Vector3D(-3.5, 3.5, -3.0)));
-                scene.addLight(new LightPoint(null, Color.WHITE, 1.0, new Vector3D(-3.5, 3.5, -3.0)));
-                scene.addLight(new LightPoint(null, Color.WHITE, 1.0, new Vector3D(-3.5, 3.5, 5.0)));
-                scene.addLight(new LightPoint(null, Color.WHITE, 1.0, new Vector3D(-3.5, 3.5, 5.0)));
-
+                scene.addLight(new LightPhong(new Vector3D(0.0, 7.0, 0.5), Color.WHITE, 0.5, 40.0));
+                scene.addLight(new LightPoint(null, Color.WHITE, 1.0, new Vector3D(0.0, 0.0, 0.5)));
+                scene.addLight(new LightPoint(null, Color.WHITE, 1.0, new Vector3D(0.0, 0.2, -0.7)));
 
                 // The direction of the light will be normalized, the values mean that the light comes from the upper front of the scene 
                 // (from user to the far away, and from up to down)
@@ -202,6 +196,6 @@ public class Main {
 
                 // Render with white background (doesn't matter the color of the background)
                 RayTracer raytracer = new RayTracer(camera, scene, Color.BLACK); // Change manually the color of background
-                raytracer.render("Renders/Ray-Tracer_V08_Reflection.png");
+                raytracer.render("Renders/Ray-Tracer_V08_Boxed.png");
         }
 }
