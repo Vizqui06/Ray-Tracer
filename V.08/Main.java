@@ -56,9 +56,9 @@ public class Main {
                 //     Z: depth. It should be between nearPlane and farPlane of the camera
                 //        With camera at Z=5 and objects at Z=0, t around 5 --> the sphere is inside the frustum
 
-                scene.addObject(new Sphere(0.22, new Vector3D(0.35, 0.35, -2.3), Color.RED, 0.6, 0, 0)); // add a red sphere with its parameters
-                scene.addObject(new Sphere(0.25, new Vector3D(-0.2, 0.55, -2.0), Color.PINK, 0.9, 0, 0)); // add a pink sphere with its parameters
-                scene.addObject(new Sphere(0.3, new Vector3D(-0.85, 0.9, -1.5), Color.GREEN, 0.3, 0, 0)); // add a green sphere with its parameters
+                scene.addObject(new Sphere(0.22, new Vector3D(0.35, 0.35, -2.3), Color.RED, 0.4, 0.4, 0.6)); // add a red sphere with its parameters
+                scene.addObject(new Sphere(0.25, new Vector3D(-0.2, 0.55, -2.0), Color.PINK, 0.9, 0.9, 1.5)); // add a pink sphere with its parameters
+                scene.addObject(new Sphere(0.3, new Vector3D(-0.85, 0.9, -1.2), Color.GREEN, 0.3, 0.3, 0.4)); // add a green sphere with its parameters
 
 
         // Triangle (v0, v1, v2, center, color)
@@ -90,25 +90,25 @@ public class Main {
 
 
                 // SHADOW FLAT SURFACE:
-                scene.addObject(new TriangleIntersection(FLLV, NLLV, NLRV, Color.YELLOW, 0.85, 0, 0)); // Left half flat surface
-                scene.addObject(new TriangleIntersection(FLRV, FLLV, NLRV, Color.YELLOW, 0.85, 0, 0)); // Right half flat surface
+                scene.addObject(new TriangleIntersection(FLLV, NLLV, NLRV, Color.YELLOW, 0.8, 0.6, 0.8)); // Left half flat surface
+                scene.addObject(new TriangleIntersection(FLRV, FLLV, NLRV, Color.YELLOW, 0.8, 0.6, 0.8)); // Right half flat surface
 
                 // WALLS TO COVER THE SCENE:
                 // RIGHT
-                scene.addObject(new TriangleIntersection(FURV, FLRV, NLRV, Color.BLUE, 0.4, 0, 0));
-                scene.addObject(new TriangleIntersection(NURV, FURV, NLRV, Color.BLUE, 0.4, 0, 0));
+                scene.addObject(new TriangleIntersection(FURV, FLRV, NLRV, Color.BLUE, 0.4, 0.5, 0.6));
+                scene.addObject(new TriangleIntersection(NURV, FURV, NLRV, Color.BLUE, 0.4, 0.5, 0.6));
 
                 // LEFT
-                scene.addObject(new TriangleIntersection(FULV, NLLV, FLLV, Color.BLUE, 0.4, 0, 0));
-                scene.addObject(new TriangleIntersection(NULV, NLLV, FULV, Color.BLUE, 0.4, 0, 0));
+                scene.addObject(new TriangleIntersection(FULV, NLLV, FLLV, Color.BLUE, 0.4, 0.5, 0.6));
+                scene.addObject(new TriangleIntersection(NULV, NLLV, FULV, Color.BLUE, 0.4, 0.5, 0.6));
 
                 // BACK:
-                scene.addObject(new TriangleIntersection(FULV, FLLV, FLRV, Color.WHITE, 0.65, 0, 0));
-                scene.addObject(new TriangleIntersection(FURV, FULV, FLRV, Color.WHITE, 0.65, 0, 0));
+                scene.addObject(new TriangleIntersection(FULV, FLLV, FLRV, Color.WHITE, 0.6, 0.7, 0.7));
+                scene.addObject(new TriangleIntersection(FURV, FULV, FLRV, Color.WHITE, 0.6, 0.7, 0.7));
 
                 // TOP (inverted normals to see the roof):
-                scene.addObject(new TriangleIntersection(FULV, NURV, NULV, Color.WHITE, 1.0, 0, 0));
-                scene.addObject(new TriangleIntersection(FURV, NURV, FULV, Color.WHITE, 1.0, 0, 0));
+                scene.addObject(new TriangleIntersection(FULV, NURV, NULV, Color.WHITE, 1.0, 1.0, 1.0));
+                scene.addObject(new TriangleIntersection(FURV, NURV, FULV, Color.WHITE, 1.0, 1.0, 1.0));
 
 
         // OBJ MODELS SETTINGS
@@ -148,9 +148,9 @@ public class Main {
         // 180° = it depends, but hopefully, looking towards the camera (-Z)
         // 270° = turned 90° to the left
 
-                Model3D modelCotton = new Model3D(new Vector3D(0.95, 0.7, -1.6), 0.9, 85.0, defaultCotton, 0.3, 0, 0);
-                Model3D modelPot = new Model3D(new Vector3D(-0.6, -0.2, -0.12), 0.50, 150.0, defaultPot, 0.6, 0, 0);
-                Model3D modelMonky = new Model3D(new Vector3D(0.40, -0.4, -2.5), 0.5, 110, defaultMonky, 0.8, 0, 0);
+                Model3D modelCotton = new Model3D(new Vector3D(0.95, 0.7, -1.6), 0.9, 85.0, defaultCotton, 0.6, 0.4, 0.50);
+                Model3D modelPot = new Model3D(new Vector3D(-0.35, -0.25, -1.8), 0.6, 60.0, defaultPot, 0.0, 0.0, 0.0);
+                Model3D modelMonky = new Model3D(new Vector3D(0.40, -0.32, -1.8), 0.5, 25, defaultMonky, 0.0, 0.0, 0.0);
 
                 // Requirements: 
                 // List of triangles (the default model of ObjReader)
@@ -179,7 +179,7 @@ public class Main {
                 scene.addLight(new LightPoint(null, Color.WHITE, 1.5, new Vector3D( 0.0, -0.5, 2.8)));
                 */
 
-                scene.addLight(new LightPhong(new Vector3D(0.0, 7.0, 0.5), Color.WHITE, 0.5, 40.0));
+                scene.addLight(new LightPhong(new Vector3D(0.0, 7.0, 0.5), Color.WHITE, 0.5, 128.0));
                 scene.addLight(new LightPoint(null, Color.WHITE, 1.0, new Vector3D(0.0, 0.0, 0.5)));
                 scene.addLight(new LightPoint(null, Color.WHITE, 1.0, new Vector3D(0.0, 0.2, -0.7)));
 
@@ -196,6 +196,6 @@ public class Main {
 
                 // Render with white background (doesn't matter the color of the background)
                 RayTracer raytracer = new RayTracer(camera, scene, Color.BLACK); // Change manually the color of background
-                raytracer.render("Renders/Ray-Tracer_V08_RefLEction.png");
+                raytracer.render("Renders/Ray-Tracer_V09_RefRAction.png");
         }
 }

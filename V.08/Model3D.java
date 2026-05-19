@@ -47,15 +47,15 @@ public class Model3D {
 
             // If there are per-vertex normals, create the triangle with them for smooth shading
             if (n0 != null && n2 != null && n1 != null && uv0 != null && uv2 != null && uv1 != null) { 
-                transformed.add(new TriangleIntersection(v0, v2, v1, triangle.getColor(), 0.4,0,0, n0, n2, n1, uv0, uv2, uv1));
+                transformed.add(new TriangleIntersection(v0, v2, v1, triangle.getColor(), 0.35,0.5,0.4, n0, n2, n1, uv0, uv2, uv1));
             }
 
             else if (n0 != null && n2 != null && n1 != null) { // If there are per-vertex normals, create the triangle with them for smooth shading
-                transformed.add(new TriangleIntersection(v0, v2, v1, triangle.getColor(), 0.75, 0, 0, n0, n2, n1));
+                transformed.add(new TriangleIntersection(v0, v2, v1, triangle.getColor(), 0.7, 0.25, 0.5, n0, n2, n1));
             } 
             
             else { // If there are no per-vertex normals nor textures, create the triangle without them for flat shading
-                transformed.add(new TriangleIntersection(v0, v2, v1, triangle.getColor(), 0.75, 0, 0));
+                transformed.add(new TriangleIntersection(v0, v2, v1, triangle.getColor(), 0.4, 0.3, 0.4));
             }
         }
         return transformed;

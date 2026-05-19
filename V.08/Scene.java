@@ -11,7 +11,7 @@ public class Scene {
     private final Camera camera; // Takes camera as an object to confirm if its method "isInFrustum" is true or false in each "hit" evaluation
 
     // Max reflection bounces: 2 minimum (have to take care of my laptop)
-    private static final int MAX_BOUNCES = 5;
+    private static final int MAX_BOUNCES = 3;
 
     // The Bounding Volume Hierarchy tree, which contains all the triangles within the scene
     private BoxesTreeNode boundingVolumeHierarchyRoot;
@@ -162,48 +162,122 @@ public class Scene {
 
 
     // RefLEction functions:
+    // Method to simply calculate if there was a hit and hasn't reached bounces limit, return a reflection bounce
     public Color bounceRay(Ray ray, int bounces, Color backgroundColor){
-        Intersection hit = intersect(ray);
+        Intersection hit = intersect(ray); // Use to prove if there is an intersection
+        // If there were no intersection, returns the background color (void)
         if(!hit.isCollition_happened()) {return backgroundColor;}
+        // If there were an intersection (and bounces still less than limit), do a reflection
         return shade(hit, ray, bounces, backgroundColor);
     }
 
     private Color shade (Intersection hit, Ray ray, int bounce, Color backgroundColor){
-        Object3D obj = hit.getObjectHit();
-        Vector3D normal = hit.getNormal();
-        Color surfaceColor = obj.rightColor(hit.getHitU(), hit.getHitV()); 
-        double red=0, green=0, blue=0;
+        Object3D objectHit = hit.getObjectHit(); // The object that is hit by the ray
+        Vector3D normal = hit.getNormal(); // The normal of the hitten object
 
-        for (Light light : lights){ 
+        // Here is needed to know WHICH object was hit to take its color
+        // Gets the color from the object hitted, now implementing textures, reflection and refraction
+
+        Color surfaceColor = objectHit.rightColor(hit.getHitU(), hit.getHitV()); // First take its UVs (if exists)
+        double red = 0, green = 0, blue = 0; // At first, no object hitten --> No color to give --> black
+
+        for (Light light : lights){  // For every light in the scene
+            // Calculate the direction and distance to the light from the hit point
             Vector3D directionToLight = light.getDirectionToLight(hit.getHitPoint());
+            // The distance to the light is needed for point lights to determine if the light is blocked 
+            // by an object (shadow) and to calculate the intensity of the light based on distance
             double distanceToLight = light.getDistanceToLight(hit.getHitPoint());
 
+            // Check if the hit point is in shadow from this light, if it is, skip the contribution of this light to the final color
             if(IsInShadow(hit.getHitPoint(), directionToLight, distanceToLight)){continue;}
 
+            // If the point is not in shadow, calculate the light contribution to the color at this point using the light's method
+            // The "makeColor" method of the light will calculate the color contribution based on its arguments
             Color contribution = light.makeColor(normal, hit.getHitPoint(), surfaceColor, camera);
-            red += contribution.getRed() / 255.0;
+            // The red, green and blue contributions are added to the final color, normalized to the range [0, 1] by dividing by 255
+            red += contribution.getRed() / 255.0; 
             green += contribution.getGreen() / 255.0;
             blue += contribution.getBlue() / 255.0;
         }
-
-        red = Math.min(1.0, red);
+        // Clamp the color values to the range [0, 1] to avoid overflow when converting back to RGB
+        red = Math.min(1.0, red); 
         green = Math.min(1.0, green);
         blue = Math.min(1.0, blue);
 
-        // Reflection: spawn a new ray in the mirrored direction if budget allows
-        double reflectivity = obj.getRefLEctivity();
-        if (reflectivity > 0.0 && bounce < MAX_BOUNCES) {
-            Vector3D D = ray.getDirection();
-            // R = D - 2(D·N)N
-            Vector3D reflectedDir = D.vectorSubstraction(normal.scalarIt(2.0 * D.productPoint(normal)));
+        // Reflection: spawn a new ray in the mirrored direction if bounce limit hasn't reached its max (variable)
+        double refLEctivity = objectHit.getRefLEctivity(); // Determines the reflection of the object (0.0 = null, 1.0 = perfect mirror)
+        // If an object HAS reflectivity and the bounces limit has not been reached
+        if (refLEctivity > 0.0 && bounce < MAX_BOUNCES) {
+            // Calculate the reflected ray direction using the formula: R = D - 2(D·N)N
+            Vector3D incRayDirection = ray.getDirection(); // Incoming ray direction (D)
+            // The reflectedDir vector is the Normal vector at the hit point (N) is already calculated and stored in the "normal" variable
+            Vector3D reflectedDir = incRayDirection.vectorSubstraction(normal.scalarIt(2.0 * incRayDirection.productPoint(normal)));
+            // The reflected ray origin is slightly offset from the hit point in the direction of the normal to avoid self-intersection issues
             Vector3D reflectedOrigin = hit.getHitPoint().vectorAddition(normal.scalarIt(1e-4));
+            // Spawn a new ray in the reflected direction and calculate its color contribution by calling bounceRay recursively, increasing the bounce count
             Color reflectedColor = bounceRay(new Ray(reflectedOrigin, reflectedDir), bounce + 1, backgroundColor);
 
             // Blend: surface color scaled down by reflectivity, reflection scaled up
-            red = red * (1.0 - reflectivity) + (reflectedColor.getRed() / 255.0) * reflectivity;
-            green = green * (1.0 - reflectivity) + (reflectedColor.getGreen() / 255.0) * reflectivity;
-            blue = blue * (1.0 - reflectivity) + (reflectedColor.getBlue() / 255.0) * reflectivity;
+            // RGB values are blended: original color is scaled down by (1 - reflectivity) 
+            // And the reflected color is scaled up by reflectivity, then added together
+            red = red * (1.0 - refLEctivity) + (reflectedColor.getRed() / 255.0) * refLEctivity;
+            green = green * (1.0 - refLEctivity) + (reflectedColor.getGreen() / 255.0) * refLEctivity;
+            blue = blue * (1.0 - refLEctivity) + (reflectedColor.getBlue() / 255.0) * refLEctivity;
         }
+
+        double refRActivity = objectHit.getRefRActivity(); // Determines the refraction of the object
+        // If an object HAS refractivity and the bounces limit has not been reached
+        if(refRActivity > 0.0 && bounce < MAX_BOUNCES){
+            // Calculate the reflected ray direction using the formula: R = D - 2(D·N)N
+            Vector3D incRayDirection = ray.getDirection(); // Incoming ray direction (D)
+            // Product point between the incoming ray direction and the surface normal of the object
+            double incRayDirectionDotNormal = incRayDirection.productPoint(normal);
+            // Determine if ray is entering or exiting the material
+            double n1, n2; // n1 and n2 are the refractive indices of the media the ray is coming from and going into, respectively
+            Vector3D refractNormal; // The normal vector used for refraction calculations, which may be flipped if the ray is exiting the object
+            if(incRayDirectionDotNormal < 0){ // If the ray is ENTERING the object: air --> obj
+                n1 = 1.0; // Assuming the ray is coming from air, which has a refractive index of 1.0
+                n2 = objectHit.getRefractiveIndex(); // The refractive index of the object being hit, so it can be different for each object
+                refractNormal = normal; // The normal is used as is for refraction calculations when the ray is entering the object
+            } else{ // If the ray is not entering, is EXITING the object: obj --> air
+                n1 = objectHit.getRefractiveIndex(); // The ray is exiting the object, so n1 is the refractive index of the object
+                n2 = 1.0; // The ray is exiting into air, which has a refractive index of 1.0
+                // Flip the normal, the normal should point against the incoming ray direction when the ray is exiting the object
+                refractNormal = normal.scalarIt(-1.0); 
+                // The dot product is flipped due to the normal being flipped, this because the angle of incidence is measured 
+                // between the incoming ray direction and the normal, and when the normal is flipped, the angle of incidence is 
+                // now reversed, so the dot product changes sign to stay consistent with the new orientation of the normal vector
+                incRayDirectionDotNormal = -incRayDirectionDotNormal;
+            }
+
+            double ratio = n1 / n2; // Ratio of the refractive indices, by Snell's law to determine the bending of the ray
+            double cosTheta1 = -incRayDirectionDotNormal; // Angle of incidence
+            double sinThetaSquare = ratio * ratio * (1.0 - cosTheta1 * cosTheta1); // Square of the sine of the angle of refraction
+
+            if(sinThetaSquare <= 1.0){
+                // There is NO total internal reflection --> calculate the refracted direction
+                double cosTheta2 = Math.sqrt(1.0 - sinThetaSquare);
+                // From the formula, T = ray direction = ratio*D + (ratio*cosTheta1 - cosTheta2)*N
+                Vector3D refractedDirection = incRayDirection.scalarIt(ratio).vectorAddition(refractNormal.scalarIt(ratio * cosTheta1 - cosTheta2));
+                // Push origin inward (opposite to normal) to enter the surface
+                // The refracted origin is slightly offset from the hit point in the opposite direction 
+                // of the normal to avoid self-intersection issues when spawning the refracted ray inside the object
+                Vector3D refractedOrigin = hit.getHitPoint().vectorSubstraction(refractNormal.scalarIt(1e-4));
+                // The refracted color is calculated by spawning a new ray in the refracted 
+                // direction and calling bounceRay recursively, increasing the bounce count
+                Color refractedColor = bounceRay(new Ray(refractedOrigin, refractedDirection), bounce + 1, backgroundColor);
+
+                // Blend: surface color scaled down, refraction scaled up by refractivity
+                // RGB values are blended: original color is scaled down by (1 - reflectivity) 
+                // And the reflected color is scaled up by reflectivity, then added together
+                red = red * (1.0 - refRActivity) + (refractedColor.getRed() / 255.0) * refRActivity;
+                green = green * (1.0 - refRActivity) + (refractedColor.getGreen() / 255.0) * refRActivity;
+                blue = blue * (1.0 - refRActivity) + (refractedColor.getBlue() / 255.0) * refRActivity;
+            }
+            // If total internal reflection occurs, the ray stays as-is (no refraction contribution)
+        }
+
+        // Returns the final color, converting the normalized RGB values back to the range [0, 255] for the Color constructor
         return new Color((int)(red * 255), (int)(green * 255), (int)(blue * 255));
     }
 }
