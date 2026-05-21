@@ -1,0 +1,105 @@
+import java.util.ArrayList;
+import java.util.List;
+
+public class Model3D {
+    private final List<TriangleIntersection> triangles;
+    private final Vector3D position; // center of the object in the scene
+    private final double scale; // scale of the object (1.0 = default size by modeler)
+    private final double rotationX; // rotates the object in the vertical axis, the X axis
+    private final double rotationY; // rotates the object in the vertical axis, the Y axis
+    private final double rotationZ; // rotates the object in the vertical axis, the X axis
+    private final double refLEctivity;
+    private final double refRActivity;
+    private final double refractiveIndex;
+
+    // position: where you want the object in the scene
+    // scale: 1.0 = original size, 0.5 = half, 2.0 = double
+    // rotationY: in degrees -> 0 = look towards +Z, 180 = look towards -Z (towards the camera)
+    public Model3D(Vector3D position, double scale, double rotationX, double rotationY, double rotationZ, 
+        List<TriangleIntersection> rawTriangles, double refLEctivity, double refRActivity, double refractiveIndex) {
+        this.position = position;
+        this.scale = scale;
+        this.rotationX = rotationX;
+        this.rotationY = rotationY;
+        this.rotationZ = rotationZ;
+        this.refLEctivity = refLEctivity;
+        this.refRActivity = refRActivity;
+        this.refractiveIndex = refractiveIndex;
+        // to apply all transformation changes in the default/defaultModel model ObjReader provided
+        this.triangles = applyTransformations(rawTriangles);
+    }
+
+    // Apply scale -> rotation Y -> translation to each vertex of each triangle
+    // ObjReader already provided triangles based on the vertices and faces by the obj file
+    // And because the faces already passed through the triangle verifier filter
+    // It is secure to get each triangle's vertex and rearrange and transform them
+
+    private List<TriangleIntersection> applyTransformations(List<TriangleIntersection> defaultModel) {
+        // List of triangles that will contain the transformed vertices
+        List<TriangleIntersection> transformed = new ArrayList<>();
+        // for every default triangle, get its color and their 3 vertices
+        for (TriangleIntersection triangle : defaultModel) {
+            // Transforming each vertex of the triangle according to the model's position, scale, and rotation
+            Vector3D v0 = transformVertex(triangle.getV0());
+            Vector3D v1 = transformVertex(triangle.getV1());
+            Vector3D v2 = transformVertex(triangle.getV2());
+
+            // If the triangle has per-vertex normals (for smooth shading), they will also be transformed
+            // The != null check is to avoid trying to transform a normal that doesn't exist (in the case of flat shading)
+            Vector3D n0 = triangle.getN0() != null ? transformNormal(triangle.getN0()) : null;
+            Vector3D n1 = triangle.getN1() != null ? transformNormal(triangle.getN1()) : null;
+            Vector3D n2 = triangle.getN2() != null ? transformNormal(triangle.getN2()) : null;
+
+            // If the triangle has textures, they will also be transformed
+            Vector3D uv0 = triangle.getUV0();
+            Vector3D uv1 = triangle.getUV1();
+            Vector3D uv2 = triangle.getUV2();
+
+            // If there are per-vertex normals, create the triangle with them for smooth shading
+            if (n0 != null && n2 != null && n1 != null && uv0 != null && uv2 != null && uv1 != null) { 
+                transformed.add(new TriangleIntersection(v0, v2, v1, triangle.getColor(), refLEctivity,refRActivity,refractiveIndex, n0, n2, n1, uv0, uv2, uv1));
+            }
+
+            else if (n0 != null && n2 != null && n1 != null) { // If there are per-vertex normals, create the triangle with them for smooth shading
+                transformed.add(new TriangleIntersection(v0, v2, v1, triangle.getColor(), refLEctivity, refRActivity, refractiveIndex, n0, n2, n1));
+            } 
+            
+            else { // If there are no per-vertex normals nor textures, create the triangle without them for flat shading
+                transformed.add(new TriangleIntersection(v0, v2, v1, triangle.getColor(), refLEctivity, refRActivity, refractiveIndex));
+            }
+        }
+        return transformed;
+    }
+
+    private Vector3D transformNormal(Vector3D normal) {
+        // It just rotates, never moves from position nor scalarized
+        return normal.rotateX(rotationX).rotateY(rotationY).rotateZ(rotationZ).normalization();
+    }
+    
+    // Method to actually set, scale and rotate the object in the scene
+    private Vector3D transformVertex(Vector3D vertex) {
+        // Scale the object
+        Vector3D scaled = new Vector3D(
+            scale * vertex.getX(),
+            scale * vertex.getY(),
+            scale * vertex.getZ()
+        );
+        // Rotate around Y axis
+        Vector3D rotated = scaled.rotateX(rotationX).rotateY(rotationY).rotateZ(rotationZ);
+        // Translate to position in the scene
+        return new Vector3D(
+            rotated.getX() + position.getX(),
+            rotated.getY() + position.getY(),
+            rotated.getZ() + position.getZ()
+        );
+    }
+
+    // Adds all the transformed and rearranged triangles to the scene 
+    public void addToScene(Scene scene) {
+        for (TriangleIntersection triangle : triangles) {
+            scene.addObject(triangle);
+        }
+    }
+    // Get the list of triangles that compose the model, in case it is needed for any reason
+    public List<TriangleIntersection> getTriangles() {return triangles;}
+}
