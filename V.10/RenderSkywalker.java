@@ -2,13 +2,14 @@ import java.awt.Color;
 import java.util.List;
 
 public class RenderSkywalker {
+        public static void main(String[] args) {renderSkywalker(args);}
         public static void renderSkywalker(String[] args) {
                 Camera camera = new Camera(new Vector3D(
                         0.0, 0.55, 6.0), // position
-                        //800.0, // temp low resolution for tests
-                        //600.0, // temp low resolution for tests
-                        4096.0, // width (in 4k)
-                        2160.0, //height (in 4k)
+                        800.0, // temp low resolution for tests
+                        600.0, // temp low resolution for tests
+                        //4096.0, // width (in 4k)
+                        //2160.0, //height (in 4k)
                         0.001, //near plane
                         100.0, //far plane
                         0.0, // Y rotation (negative values to look at left)
@@ -28,9 +29,9 @@ public class RenderSkywalker {
 
 
                 // Textures for the floor, walls and roof
-                Texture textFloor = new Texture("Textures/Forties/Ambient/textFloor.png");
-                Texture textBricks = new Texture("Textures/Forties/Ambient/textBricks.jpg");
-                Texture textMetal = new Texture("Textures/Forties/Ambient/textMetal.jpg");
+                Texture textFloor = new Texture("Textures/Skywalker/Ambient/textFloor.png");
+                Texture textBricks = new Texture("Textures/Skywalker/Ambient/textBricks.jpg");
+                Texture textMetal = new Texture("Textures/Skywalker/Ambient/textMetal.jpg");
 
                 // UV corners reused across all planes
                 Vector3D uvBL = new Vector3D(0.0, 0.0, 0.0); // bottom-left of texture
@@ -88,17 +89,17 @@ public class RenderSkywalker {
                 scene.addObject(topB);
 
 
-                Texture textBicycle = new Texture("Textures/Forties/Objects/textBicycle.jpg");
-                Texture textBoots = new Texture("Textures/Forties/Objects/textBoots.png");
-                Texture textPistol = new Texture("Textures/Forties/Objects/textPistol.jpg");
-                Texture textRadio = new Texture("Textures/Forties/Objects/textRadio.jpg");
-                Texture textUniform = new Texture("Textures/Forties/Objects/textUniform.png");
+                Texture textBicycle = new Texture("Textures/Skywalker/Objects/textBicycle.jpg");
+                Texture textBoots = new Texture("Textures/Skywalker/Objects/textBoots.png");
+                Texture textPistol = new Texture("Textures/Skywalker/Objects/textPistol.jpg");
+                Texture textRadio = new Texture("Textures/Skywalker/Objects/textRadio.jpg");
+                Texture textUniform = new Texture("Textures/Skywalker/Objects/textUniform.png");
 
-                List<TriangleIntersection> defaultBicycle = ObjReader.load("Models/Forties/Bicycle.obj", Color.DARK_GRAY);
-                List<TriangleIntersection> defaultBoots = ObjReader.load("Models/Forties/Boots.obj", Color.DARK_GRAY);
-                List<TriangleIntersection> defaultRadio = ObjReader.load("Models/Forties/Radio.obj", Color.DARK_GRAY);
-                List<TriangleIntersection> defaultPistol = ObjReader.load("Models/Forties/Pistol.obj", Color.DARK_GRAY);
-                List<TriangleIntersection> defaultUniform = ObjReader.load("Models/Forties/Uniform.obj", Color.DARK_GRAY);
+                List<TriangleIntersection> defaultBicycle = ObjReader.load("Models/Skywalker/Bicycle.obj", Color.DARK_GRAY);
+                List<TriangleIntersection> defaultBoots = ObjReader.load("Models/Skywalker/Boots.obj", Color.DARK_GRAY);
+                List<TriangleIntersection> defaultRadio = ObjReader.load("Models/Skywalker/Radio.obj", Color.DARK_GRAY);
+                List<TriangleIntersection> defaultPistol = ObjReader.load("Models/Skywalker/Pistol.obj", Color.DARK_GRAY);
+                List<TriangleIntersection> defaultUniform = ObjReader.load("Models/Skywalker/Uniform.obj", Color.DARK_GRAY);
 
                 Model3D modelBicycle = new Model3D(new Vector3D(-0.65, -0.24, -2.6), 0.046, -90.0, -90.0, 0.0, defaultBicycle, 0.0, 0.0, 0.0);
                 Model3D modelBoots = new Model3D(new Vector3D(-0.85, -0.62, -2.2), 0.018, -90.0, 25.0, -2.0, defaultBoots, 0.08, 0.2, 0.3);
@@ -127,6 +128,6 @@ public class RenderSkywalker {
                 scene.buildTheBoundingVolumeHierarchyTree();
 
                 RayTracer raytracer = new RayTracer(camera, scene, Color.BLACK);
-                raytracer.render("Renders/Ray-Tracer_V10_Forties.png");
+                raytracer.render("Renders/Ray-Tracer_V10_Skywalker.png");
         }
 }

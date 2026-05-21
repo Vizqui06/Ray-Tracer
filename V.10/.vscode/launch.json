@@ -1,0 +1,48 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "RenderEmpire",
+            "request": "launch",
+            "mainClass": "RenderEmpire",
+            "projectName": "V.10_35bcbd51"
+        },
+        {
+            "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "Main",
+            "args": [
+                "empire"
+            ]
+        },
+        {
+            "type": "java",
+            "name": "Run Empire",
+            "request": "launch",
+            "mainClass": "Main",
+            "args": [
+                "empire"
+            ]
+        },
+        {
+            "type": "java",
+            "name": "Run Forties",
+            "request": "launch",
+            "mainClass": "Main",
+            "args": [
+                "forties"
+            ]
+        },
+        {
+            "type": "java",
+            "name": "Run Skywalker",
+            "request": "launch",
+            "mainClass": "Main",
+            "args": [
+                "skywalker"
+            ]
+        }
+    ]
+}

@@ -2,6 +2,7 @@ import java.awt.Color;
 import java.util.List;
 
 public class RenderForties {
+        public static void main(String[] args) {renderForties(args);}
         public static void renderForties(String[] args) {
 
                 // Instructions on how to use the main parameters (its kinda difficult if you don't have a fresh context):
@@ -28,10 +29,10 @@ public class RenderForties {
                 // nearPlane of 0.1 is very close, farPlane of 100 is decently far
                 Camera camera = new Camera(new Vector3D(
                         0.0, 0.55, 6.0), // position
-                        //800.0, // temp low resolution for tests
-                        //600.0, // temp low resolution for tests
-                        4096.0, // width (in 4k)
-                        2160.0, //height (in 4k)
+                        800.0, // temp low resolution for tests
+                        450.0, // temp low resolution for tests
+                        //4096.0, // width (in 4k)
+                        //2160.0, //height (in 4k)
                         0.001, //near plane
                         100.0, //far plane
                         0.0, // Y rotation (negative values to look at left)
@@ -196,7 +197,7 @@ public class RenderForties {
         Model3D modelBoots = new Model3D(new Vector3D(-0.85, -0.62, -2.2), 0.018, -90.0, 25.0, -2.0, defaultBoots, 0.08, 0.2, 0.3);
         Model3D modelPistol = new Model3D(new Vector3D(0.35, -0.52, -1.25), 0.0030, -20.0, 250.0, 170.0, defaultPistol, 0.1, 0.2, 0.3);
         Model3D modelRadio = new Model3D(new Vector3D(0.75, -0.427, -1.6), 0.0018, 4.0, -25.0, 2.8, defaultRadio, 0.07, 0.2, 0.3);
-        Model3D modelUniform = new Model3D(new Vector3D(0.78, -0.05, -2.3), 0.032, -91.5, -210.0, 0.0, defaultUniform, 0.02, 0.0, 0.0);
+        Model3D modelUniform = new Model3D(new Vector3D(0.78, 0.12, -2.3), 0.032, -91.5, -210.0, 0.0, defaultUniform, 0.02, 0.0, 0.0);
                 
                 // Requirements: 
                 // List of triangles (the default model of ObjReader)

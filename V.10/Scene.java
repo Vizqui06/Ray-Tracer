@@ -11,7 +11,7 @@ public class Scene {
     private final Camera camera; // Takes camera as an object to confirm if its method "isInFrustum" is true or false in each "hit" evaluation
 
     // Max reflection bounces: 2 minimum (have to take care of my laptop)
-    private static final int MAX_BOUNCES = 3;
+    public static final int MAX_BOUNCES = 3;
 
     // The Bounding Volume Hierarchy tree, which contains all the triangles within the scene
     private BoxesTreeNode boundingVolumeHierarchyRoot;
