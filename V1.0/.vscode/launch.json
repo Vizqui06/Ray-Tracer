@@ -3,6 +3,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "RenderForties",
+            "request": "launch",
+            "mainClass": "RenderForties",
+            "projectName": "V1.0_35bcc837"
+        },
+        {
+            "type": "java",
             "name": "RenderEmpire",
             "request": "launch",
             "mainClass": "RenderEmpire",

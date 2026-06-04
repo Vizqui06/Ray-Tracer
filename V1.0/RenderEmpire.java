@@ -117,7 +117,7 @@ public class RenderEmpire {
                 scene.addLight(new LightPoint(null, Color.WHITE, 1.8, new Vector3D(-1.0,  0.9, -1.5))); // above the samurai side
                 scene.addLight(new LightPoint(null, Color.WHITE, 1.8, new Vector3D( 1.0,  0.9, -1.5))); // above the vase side
                 scene.addLight(new LightPoint(null, Color.WHITE, 1.5, new Vector3D( 0.0,  0.9, -3.5))); // near the back wall
-                scene.addLight(new LightPhong(new Vector3D(0, -0.2, 1), Color.WHITE, 0.7, 80.0));
+                scene.addLight(new LightPhong(new Vector3D(0, -0.2, 1), Color.WHITE, 0.5, 80.0));
                 
                 scene.buildTheBoundingVolumeHierarchyTree();
 

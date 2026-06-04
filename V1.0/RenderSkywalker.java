@@ -149,7 +149,7 @@ public class RenderSkywalker {
                 scene.addLight(new LightPoint(null, Color.MAGENTA, 1.6, new Vector3D(0.3, 0.0, 1.0)));
                 scene.addLight(new LightPoint(null, Color.WHITE, 1.8, new Vector3D(-1.75, -0.65, -3.6)));
                 scene.addLight(new LightPhong(new Vector3D(0, -0.2, 1), Color.WHITE, 1.2, 80.0));
-                scene.addLight(new LightPhong(new Vector3D(0, 0.3, 1), Color.WHITE, 1.2, 80.0));
+                scene.addLight(new LightPhong(new Vector3D(0, 0.3, 1), Color.WHITE, 1.3, 80.0));
 
                 scene.buildTheBoundingVolumeHierarchyTree();
 

@@ -28,7 +28,7 @@ public class RenderForties {
                 Texture textHat = new Texture("Textures/Forties/Objects/textHat.jpeg");
                 Texture textRadio = new Texture("Textures/Forties/Objects/textRadio.jpeg");
                 Texture textRifle = new Texture("Textures/Forties/Objects/textRifle.png");
-                Texture textStatue = new Texture("Textures/Forties/Objects/textStatue.png");
+                //Texture textStatue = new Texture("Textures/Forties/Objects/textStatue.png"); No textures because is TOO heavy
                 Texture textUniform = new Texture("Textures/Forties/Objects/textUniform.png");
                 Texture textTent = new Texture("Textures/Forties/Objects/textTent.png");
 
@@ -50,7 +50,7 @@ public class RenderForties {
                 List<TriangleIntersection> defaultHat = ObjReader.load("Models/Forties/Hat.obj", Color.DARK_GRAY);
                 List<TriangleIntersection> defaultRadio = ObjReader.load("Models/Forties/Radio.obj", Color.DARK_GRAY);
                 List<TriangleIntersection> defaultRifle = ObjReader.load("Models/Forties/Rifle.obj", Color.DARK_GRAY);
-                List<TriangleIntersection> defaultStatue = ObjReader.load("Models/Forties/Statue.obj", Color.RED);
+                List<TriangleIntersection> defaultStatue = ObjReader.load("Models/Forties/Statue.obj", Color.LIGHT_GRAY);
                 List<TriangleIntersection> defaultTent = ObjReader.load("Models/Forties/Tent.obj", Color.DARK_GRAY);
                 List<TriangleIntersection> defaultUniform = ObjReader.load("Models/Forties/Uniform.obj", Color.DARK_GRAY);
 
@@ -63,7 +63,7 @@ Model3D modelHat = new Model3D(new Vector3D(-1.22, 0.53, -2.2), 0.0014, 3.0, 35.
 Model3D modelRadio = new Model3D(new Vector3D(-0.537, 0.14, -2.0), 0.004, 0.0, 0.0, 0.0, defaultRadio, 0.2, 0.0, 0.0);
 Model3D modelRifle = new Model3D(new Vector3D(0.4, -0.31, -1.7), 0.84, 0.0, 80.0, -90.0, defaultRifle, 0.05, 0.0, 0.0);
 Model3D modelStatue = new Model3D(new Vector3D(1.0, -0.01, -2.0), 0.055, 0.0, 65.0, 0.0, defaultStatue, 0.3, 0.01, 0.01);
-Model3D modelTent = new Model3D(new Vector3D(0.0, 0.13, -2.0), 0.9, 0.0, 0.0, 0.0, defaultTent, 0.0, 0.001, 0.01);
+Model3D modelTent = new Model3D(new Vector3D(0.0, 0.15, -2.0), 0.95, 0.0, 0.0, 0.0, defaultTent, 0.0, 0.0, 0.0);
 Model3D modelUniform = new Model3D(new Vector3D(-1.25, -0.08, -2.2), 0.032, -91.5, -145.0, 0.0, defaultUniform, 0.06, 0.05, 0.05);
 
                 // Add the objects to the scene
@@ -88,7 +88,7 @@ Model3D modelUniform = new Model3D(new Vector3D(-1.25, -0.08, -2.2), 0.032, -91.
                 for (TriangleIntersection tri : modelHat.getTriangles()) {tri.setTexture(textHat);}
                 for (TriangleIntersection tri : modelRadio.getTriangles()) {tri.setTexture(textRadio);}
                 for (TriangleIntersection tri : modelRifle.getTriangles()) {tri.setTexture(textRifle);}
-                for (TriangleIntersection tri : modelStatue.getTriangles()) {tri.setTexture(textStatue);}
+                //for (TriangleIntersection tri : modelStatue.getTriangles()) {tri.setTexture(textStatue);}
                 for (TriangleIntersection tri : modelTent.getTriangles()) {tri.setTexture(textTent);}
                 for (TriangleIntersection tri : modelUniform.getTriangles()) {tri.setTexture(textUniform);}
 
@@ -101,11 +101,11 @@ Model3D modelUniform = new Model3D(new Vector3D(-1.25, -0.08, -2.2), 0.032, -91.
                 for (TriangleIntersection tri : modelRadio.getTriangles()) {tri.setNormalMap(normalRadio);}
                 for (TriangleIntersection tri : modelRifle.getTriangles()) {tri.setNormalMap(normalRifle);}
 
-                scene.addLight(new LightPhong(new Vector3D(0.0, 0.235, 1.0), Color.WHITE, 2.0, 100.0)); // outside light
-                scene.addLight(new LightPoint(null, Color.WHITE, 2.5, new Vector3D(0.0,  0.5, 1.0))); // roof light (near)
-                scene.addLight(new LightPoint(null, Color.WHITE, 1.0, new Vector3D(-1.3,  1.2, 1.5))); // illumination 1
-                scene.addLight(new LightPoint(null, Color.WHITE, 1.0, new Vector3D(1.3,  1.2, 1.5))); // illumination 2
-                scene.addLight(new LightPoint(null, Color.WHITE, 4.5, new Vector3D(-0.2,  0.5, 3.5))); // outside light
+                scene.addLight(new LightPhong(new Vector3D(0.0, 0.22, 1.0), Color.WHITE, 0.4, 50.0)); // outside light
+                scene.addLight(new LightPoint(null, Color.WHITE, 2.0, new Vector3D(0.0,  0.5, 1.0))); // roof light (near)
+                scene.addLight(new LightPoint(null, Color.WHITE, 2.0, new Vector3D(-1.3,  1.2, 1.5))); // illumination 1
+                scene.addLight(new LightPoint(null, Color.WHITE, 2.0, new Vector3D(1.3,  1.2, 1.5))); // illumination 2
+                scene.addLight(new LightPoint(null, Color.WHITE, 4.0, new Vector3D(-0.2,  0.5, 3.5))); // outside light
 
                 // Builds the Bounding Volume Hierarchy with ALL the triangles that are already added
                 scene.buildTheBoundingVolumeHierarchyTree();
