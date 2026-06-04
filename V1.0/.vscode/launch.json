@@ -1,0 +1,90 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "RenderEmpire",
+            "request": "launch",
+            "mainClass": "RenderEmpire",
+            "projectName": "V1.0_35bcc837"
+        },
+        {
+            "type": "java",
+            "name": "RenderSkywalker",
+            "request": "launch",
+            "mainClass": "RenderSkywalker",
+            "projectName": "V1.0_35bcc837"
+        },
+        {
+            "type": "java",
+            "name": "RenderSkywalker",
+            "request": "launch",
+            "mainClass": "RenderSkywalker",
+            "projectName": "V.099_81daea5e"
+        },
+        {
+            "type": "java",
+            "name": "RenderForties",
+            "request": "launch",
+            "mainClass": "RenderForties",
+            "projectName": "V.099_81daea5e"
+        },
+        {
+            "type": "java",
+            "name": "RenderSkywalker",
+            "request": "launch",
+            "mainClass": "RenderSkywalker",
+            "projectName": "V.10_35bcbd51"
+        },
+        {
+            "type": "java",
+            "name": "RenderForties",
+            "request": "launch",
+            "mainClass": "RenderForties",
+            "projectName": "V.10_35bcbd51"
+        },
+        {
+            "type": "java",
+            "name": "RenderEmpire",
+            "request": "launch",
+            "mainClass": "RenderEmpire",
+            "projectName": "V.10_35bcbd51"
+        },
+        {
+            "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "Main",
+            "args": [
+                "empire"
+            ]
+        },
+        {
+            "type": "java",
+            "name": "Run Empire",
+            "request": "launch",
+            "mainClass": "Main",
+            "args": [
+                "empire"
+            ]
+        },
+        {
+            "type": "java",
+            "name": "Run Forties",
+            "request": "launch",
+            "mainClass": "Main",
+            "args": [
+                "forties"
+            ]
+        },
+        {
+            "type": "java",
+            "name": "Run Skywalker",
+            "request": "launch",
+            "mainClass": "Main",
+            "args": [
+                "skywalker"
+            ]
+        }
+    ]
+}
